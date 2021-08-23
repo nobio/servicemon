@@ -1,0 +1,86 @@
+---
+# ================== Config for Rollback Handler ==================
+rollbackhandling:
+  # cycle time in seconds when Rollback should be performed
+  latency: 50
+  # expire time of a transaction in seconds (3600 = 1h)
+  expire: 3600
+  
+# ================ Configuration of Persistance Targets (=receiver) ================
+persistenceTarget: 
+  # ================ define the persistence target ================
+  # values: DATABASE, CONSOLE, RESTFUL, FILE
+  persistence: CONSOLE
+
+  # databaseType only makes sense if persistence = DATABASE
+  # values: LOKIJS (local), MONGODB
+  databaseType: LOKIJS
+
+  # ================ definition of delete task ================
+  # deleteAfterTimeUnit: time unit of deleteAfter value
+  deleteAfter: 24
+  deleteAfterTimeUnit: hours
+  # values: seconds, minutes, hours, days
+  # latency: cycle time in sconds the delete job is started
+  latency: 600
+
+  # ================ configuration for database persistence ================
+  database:
+    protocol: mongodb+srv
+    user: user 
+    password: password
+    uri: cluster.arj0i.mongodb.net/user?retryWrites=true&w=majority
+
+  # ================ configuration for restful persistence ================
+  restendpoint:
+    protocol: http
+    method: post
+    baseUrl: localhost:28090/api
+    url: "/httpstatus"
+    ignoreSSL: true
+
+  # ================ configuration for file persistence ================
+  fileendpoint:
+    filename: status-events.log
+    filedir: ./archive
+    maxSize: '5 MB'
+
+# ================ list of hosts to test ================
+# enable:     true/false activate/deactivate the test for this host
+# id:         unique id; will be used for GET methods
+# name:       display name for test
+# protocol:   part of uri; could be http/https
+# method:     part of uri; could be get/post/put/delete/etc.
+# baseUrl:    part of uri; base url
+# url:        part of uri; like the context
+# ignoreSSL:  ignore self signed certificates
+# schedule:   cycle time to repeat the test
+# =======================================================
+hosts:
+- enable: true
+  id: 1
+  name: Test heise.de successfully
+  protocol: https
+  method: get
+  baseUrl: www.heise.de
+  url: ""
+  ignoreSSL: false
+  schedule: 10
+- enable: true
+  id: 2
+  name: Test 404
+  protocol: https
+  method: get
+  baseUrl: www.zeiss.de
+  url: "/xyz"
+  ignoreSSL: true
+  schedule: 10
+- enable: true
+  id: 3
+  name: Test Timeout
+  protocol: https
+  method: get
+  baseUrl: www.spiegel.de:30043
+  url: "/pingX"
+  ignoreSSL: true
+  schedule: 5

@@ -1,0 +1,46 @@
+---
+# ================== Config for Rollback Handler ==================
+rollbackhandling:
+  # cycle time in seconds when Rollback should be performed
+  latency: 600
+  # expire time of a transaction in seconds (3600 = 1h)
+  expire: 3600
+  
+# ================ Configuration of Persistance Targets (=receiver) ================
+persistenceTarget: 
+  # ================ define the persistence target ================
+  # values: DATABASE, CONSOLE, RESTFUL, FILE
+  persistence: DATABASE
+
+  # databaseType only makes sense if persistence = DATABASE
+  # values: LOKIJS (local), MONGODB
+  databaseType: LOKIJS
+
+  # ================ definition of delete task ================
+  # deleteAfterTimeUnit: time unit of deleteAfter value
+  deleteAfter: 24
+  deleteAfterTimeUnit: hours
+  # values: seconds, minutes, hours, days
+  # latency: cycle time in sconds the delete job is started
+  latency: 600
+
+  # ================ configuration for database persistence ================
+  database:
+    protocol: mongodb+srv
+    user: user 
+    password: password
+    uri: cluster.arj0i.mongodb.net/user?retryWrites=true&w=majority
+
+  # ================ configuration for restful persistence ================
+  restendpoint:
+    protocol: http
+    method: post
+    baseUrl: localhost:28090/api
+    url: "/httpstatus"
+    ignoreSSL: true
+
+  # ================ configuration for file persistence ================
+  fileendpoint:
+    filename: status-events.log
+    filedir: ./archive
+    maxSize: '5 MB'
