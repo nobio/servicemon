@@ -13,28 +13,19 @@
 hosts:
 - enable: true
   id: 1
-  name: Test heise.de successfully
+  name: Test timetracker successfully
   protocol: https
   method: get
-  baseUrl: www.heise.de
-  url: ""
+  baseUrl: nobio.myhome-server.de
+  url: /timetracker/
   ignoreSSL: false
-  schedule: 10
+  schedule: 60
 - enable: true
   id: 2
-  name: Test 404
+  name: Test nextcloud successfully
   protocol: https
   method: get
-  baseUrl: www.zeiss.de
-  url: "/xyz"
-  ignoreSSL: true
-  schedule: 10
-- enable: true
-  id: 3
-  name: Test Timeout
-  protocol: https
-  method: get
-  baseUrl: www.spiegel.de:30043
-  url: "/pingX"
-  ignoreSSL: true
-  schedule: 5
+  baseUrl: nobio.myhome-server.de
+  url: /nextcloud/
+  ignoreSSL: false
+  schedule: 60
