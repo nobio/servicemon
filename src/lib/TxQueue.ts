@@ -121,7 +121,7 @@ export class TxQueue extends EventEmitter.EventEmitter {
   }
 
   /**
-   * returns true if the queue still has items left; can be used to iterate 
+   * returns true if the queue still has items left; can be used to iterate
    */
   public hasItems(): boolean {
     return this.queue.length > 0;

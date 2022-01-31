@@ -17,9 +17,9 @@ export class Util {
   constructor() { }
 
   /**
-   * 
-   * @param req 
-   * @param res 
+   *
+   * @param req
+   * @param res
    */
   public handleRoot(req: Request, res: Response) {
     res.status(200).json([
@@ -57,9 +57,9 @@ export class Util {
   };
 
   /**
-   * 
-   * @param req 
-   * @param res 
+   *
+   * @param req
+   * @param res
    */
   public receiveHttpStatus(req: Request, res: Response): void {
     const o = new Output();
@@ -85,8 +85,8 @@ export class Util {
 
   /**
    * load hosts configuration incl. last measurements
-   * @param req 
-   * @param res 
+   * @param req
+   * @param res
    */
   public async getWatchedHostsWithLastStatus(req: Request, res: Response) {
     let workspace: any = req.query['workspace'];
@@ -95,9 +95,9 @@ export class Util {
     let hostCfg: HostConfig[] = [];
 
     // if workspace-filter was given, filter hosts regarding their workspace parameter
-    if(workspace) {
+    if (workspace) {
       hostConfigs.forEach(host => {
-        if(host.workspace.indexOf(workspace) != -1) {
+        if (host.workspace.indexOf(workspace) != -1) {
           hostCfg.push(host);
         }
       });
@@ -109,7 +109,7 @@ export class Util {
     new Promise((resolve, reject) => {
 
       // return empty result if no hosts were found
-      if(hostCfg.length === 0)  resolve([]);
+      if (hostCfg.length === 0) resolve([]);
 
       const hostConfigWithStatuses: HostConfigStatus[] = new Array<HostConfigStatus>();
       hostCfg.forEach((host, idx, array) => {
@@ -132,8 +132,8 @@ export class Util {
 
   /**
    * curl -X GET http://localhost:28090/api/hosts
-   * @param req 
-   * @param res 
+   * @param req
+   * @param res
    */
   public async getWatchedHosts(req: Request, res: Response) {
     const hostConfigs = Configuration.getInstance().hostsConfigs;
@@ -142,8 +142,8 @@ export class Util {
 
   /**
    * curl -X GET http://localhost:28090/api/queue/xxxxxxxx-4533-43d7-aa52-1d4c0a066ea2/status
-   * @param req 
-   * @param res 
+   * @param req
+   * @param res
    */
   public getLastStatus(req: Request, res: Response) {
     if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) { res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' }); return; }
@@ -157,8 +157,8 @@ export class Util {
   /**
    * curl -X GET "http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/month?start=2020-10-11&count=1"
    * curl -X GET http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/month?count=1
-   * @param req 
-   * @param res 
+   * @param req
+   * @param res
    */
   public getTimeSeries(req: Request, res: Response) {
     if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) { res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' }); return; }
@@ -189,7 +189,7 @@ export class Util {
   public static loadConfig() {
     let target: string;
 
-    if(process.env.CONFIGPATH) {
+    if (process.env.CONFIGPATH) {
       target = process.env.CONFIGPATH + '/upstreammon-config.yaml';
     } else {
       target = `${__dirname}/../../config/config.yaml`;
@@ -203,7 +203,7 @@ export class Util {
   public static loadHostConfig() {
     let target: string;
 
-    if(process.env.CONFIGPATH) {
+    if (process.env.CONFIGPATH) {
       target = process.env.CONFIGPATH + '/upstreammon-hosts-config.yaml';
     } else {
       target = `${__dirname}/../../config/config-hosts.yaml`;

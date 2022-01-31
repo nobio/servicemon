@@ -2,7 +2,7 @@
   "name": "servicemon",
   "version": "1.0.0",
   "description": "Monitoring of any endpoints, mainly my own site and api",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "rimraf ./build && rimraf ./tmp && rimraf ./src/lib/web && rimraf ./*.db*",
     "start": "node build/index.js",

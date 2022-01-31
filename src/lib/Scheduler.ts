@@ -55,7 +55,7 @@ export class Scheduler {
     }
 
     /**
-    * invokes 
+    * invokes
     * @param cfg configuration
     */
     private invoke(cfg: HostConfig) {
@@ -90,10 +90,10 @@ export class Scheduler {
             if (resp.data && resp.data['status']) output.statusText = resp.data['status'];
             if (!output.statusText && resp.statusText) output.statusText = resp.statusText;
             if (!output.statusText) output.statusText = this.httpCodes.translateCodeToText('' + output.status);
-            
+
             output.uri = resp.request.res.responseUrl;
             output.method = resp.config.method;
-            
+
         } else {
             if (resp.errno) {
                 switch (resp.errno) {

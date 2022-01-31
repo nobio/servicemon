@@ -55,7 +55,7 @@ export class RestfulTarget implements PersistenceTarget {
   }
 
   deleteRecords(hours: number): Promise<number> {
-    // nothing to do...    
+    // nothing to do...
     return new Promise((resolve, reject) => {
       resolve(0);
     });

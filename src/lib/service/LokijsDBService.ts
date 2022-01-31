@@ -7,7 +7,7 @@ const loki = require('lokijs');
 const lfsa = require('lokijs/src/loki-fs-structured-adapter');
 
 // Since autosave timer keeps program from exiting, we exit this program by ctrl-c.
-// (optionally) For best practice, lets use the standard exit events to force a db flush to disk 
+// (optionally) For best practice, lets use the standard exit events to force a db flush to disk
 //    if autosave timer has not had a fired yet (if exiting before 4 seconds).
 process.on('SIGINT', () => {
     Log.silly("flushing database");
@@ -125,7 +125,7 @@ export class LokijsDBService implements DataService {
             const res = this.httpStatusEvents.chain().find({ tsStart: { $lte: timestamp } }).remove();
             this.db.saveDatabase(() => {
                 //Log.info(res.collection.data)
-                resolve(res.collection.data.length);    
+                resolve(res.collection.data.length);
             })
         });
     }

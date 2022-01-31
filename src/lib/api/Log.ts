@@ -31,7 +31,7 @@ export class Log {
       case 'fatal': this.logger.setSettings({ minLevel: 'fatal' }); break;
       default: this.logger.setSettings({ minLevel: 'debug' }); break;
     }
-  
+
     if (process.env.LOGPATH && process.env.LOGFILE) {
       console.log(`logging to ${process.env.LOGPATH}/${process.env.LOGFILE}`);
       this.logger.setSettings({ suppressStdOutput: true });

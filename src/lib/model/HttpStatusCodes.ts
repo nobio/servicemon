@@ -58,7 +58,7 @@ export class HttpStatusCodes {
    ];
    /**
      * return the http-status code object, regardles if it is the numeric or alphanumeric value
-     * @param {*} httpStatus http status code 
+     * @param {*} httpStatus http status code
      * @returns status code object
      */
    public translateCodeToText(httpStatusCode: string): string {

@@ -140,7 +140,7 @@ export class MongoDBService implements DataService {
 
   /**
    * curl -X GET "http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/minutes?start=2020-10-11&count=1"
-   * @param params 
+   * @param params
    */
   public async getTimeSeries(params: TimeseriesParams): Promise<Array<Output>> {
     Log.silly(params);

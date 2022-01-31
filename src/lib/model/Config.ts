@@ -19,7 +19,7 @@ export class Configuration {
   private static instance: Configuration;
 
   private constructor() {
-    try {      
+    try {
       this.hostsConfigs = Util.loadHostConfig().hosts;
       this.peristenceConfig = Util.loadConfig().persistenceTarget;
     } catch (e) {

@@ -1,4 +1,4 @@
-FROM will.be.overwritten.by.mock-build.values.yaml.baseImage
+FROM node:1 node:166 
 
 # Create app directory
 WORKDIR /usr/src/app
