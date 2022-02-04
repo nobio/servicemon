@@ -1,6 +1,6 @@
 version: "3"
 services:
-  timetracker:
+  servicemon:
     container_name: servicemon
     restart: always
     image: nobio/servicemon:latest

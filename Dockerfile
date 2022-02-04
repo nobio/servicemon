@@ -1,12 +1,15 @@
 FROM node:16
-WORKDIR /opt/nobmon
+#FROM arm32v7/node:latest
+WORKDIR /opt/servicemon
 
 # copy configs to /app folder
 COPY package*.json ./
 COPY tsconfig.json ./
 # copy source code to /usr/src/app folder
-COPY src /opt/nobmon/src
+COPY src /opt/servicemon/src
 
+#RUN apt-get update -y
+#RUN apt-get install -y python
 RUN npm install
 RUN npm run build --production
 
