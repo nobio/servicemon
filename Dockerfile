@@ -1,29 +1,19 @@
-FROM node:1 node:166 
+FROM node:16
+WORKDIR /opt/nobmon
 
-# Create app directory
-WORKDIR /usr/src/app
-
+# copy configs to /app folder
 COPY package*.json ./
 COPY tsconfig.json ./
-COPY .
+# copy source code to /usr/src/app folder
+COPY src /opt/nobmon/src
 
-RUN npm set progress=false && \
-    npm config set depth 0 && \
-    npm install -g typescript && \
-    npm install
-
-# Bundle app source
+RUN npm install
 RUN npm run build --production
 
 # create database files (lokijs) and fix access rights
 RUN touch monitor.db monitor.db.0
 RUN chmod g+rw monitor.db*
 
-EXPOSE 28090 
-
-# set environment for logfile
-ENV DEBUGLEVEL=info
-#ENV LOGPATH=/var/log/mock
-#ENV LOGFILE=upstreammon.log
+EXPOSE 28090 28090
 
 CMD [ "npm", "start" ]

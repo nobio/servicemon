@@ -196,10 +196,9 @@ export class Util {
     }
 
     Log.info(`loading config ${target}`);
-    const config = yml.load(target, 'utf8');
-
-    return config
+    return yml.load(target, 'utf8');
   }
+
   public static loadHostConfig() {
     let target: string;
 
