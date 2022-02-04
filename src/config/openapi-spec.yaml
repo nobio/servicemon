@@ -28,9 +28,8 @@ paths:
       tags:
         - default
       summary: Bechreibung der Services
-      parameters:
       responses:
-        'default': 
+        "default":
           description: returns parameter as passed in request (Key=Magic-Header)
           content:
             application/json:
@@ -38,7 +37,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  properties: 
+                  properties:
                     method:
                       type: string
                       description: http method
@@ -55,28 +54,28 @@ paths:
                       type: string
                       description: curl example how to call this service
                       example: curl -X GET http://<host>:<port>/api/hosts
-#######################################################
+  #######################################################
   /api/hosts:
     get:
       tags:
         - hosts
       summary: Liefert alle Hosts mit deren Konfiguration
       parameters:
-      - name: workspace
-        in: query
-        description: optional filter for hosts assigned to certain workspace
-        required: false
-        schema:
-          type: string
-        example: intern
+        - name: workspace
+          in: query
+          description: optional filter for hosts assigned to certain workspace
+          required: false
+          schema:
+            type: string
+          example: intern
       responses:
-        'default': 
-          description: Liste über alle konfigurierten Hosts 
+        "default":
+          description: Liste über alle konfigurierten Hosts
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/hosts'
-#######################################################
+                $ref: "#/components/schemas/hosts"
+  #######################################################
   /api/httpstatus:
     post:
       tags:
@@ -87,41 +86,45 @@ paths:
         content:
           application/json; charset=utf-8:
             schema:
-              $ref: '#/components/schemas/status-receive'
+              $ref: "#/components/schemas/status-receive"
       parameters:
-      - name: id
-        in: path
-        description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
-        required: true
-        schema:
-          type: string
-
-#######################################################
+        - name: id
+          in: path
+          description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Succesful Response
+        "500":
+          description: Failed Response
+  #######################################################
   /api/queue/{configId}/status:
     get:
       tags:
         - queue
       summary: Liefert den letzten ermittelten Status einer Host-Abfrage mit Metadaten
       parameters:
-      - name: configId
-        in: path
-        description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
-        required: true
-        schema:
-          type: string
+        - name: configId
+          in: path
+          description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
+          required: true
+          schema:
+            type: string
       responses:
-        'default': 
-          description: Letztes Statusergebnis für den angegebenen Host 
+        "default":
+          description: Letztes Statusergebnis für den angegebenen Host
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/status'
-#######################################################
+                $ref: "#/components/schemas/status"
+  #######################################################
   /api/queue/{configId}/timeseries/{timeUnit}:
     get:
       tags:
         - queue
-      summary: | 
+      summary: |
         Liefert eine Zeitreihe gemessener Daten. Dazu muss neben dem Host (configId) eine Zeiteinheit (z.B. hours) und die Anzahl der Zeiteinheiten gegeben werden. Es werden also die Datensätze selektiert, die zwischen "jetzt" und n Zeiteinheiten von "jetzt" in der Vergangeneheit liegen.
       parameters:
         - name: configId
@@ -135,9 +138,9 @@ paths:
           description: Zeiteinheit
           required: true
           schema:
-              type: string
-              default: hours
-              enum:
+            type: string
+            default: hours
+            enum:
               - months
               - days
               - hours
@@ -150,167 +153,166 @@ paths:
           schema:
             type: number
       responses:
-        'default': 
-          description: Liste der Statusergebnis für den angegebenen Host und Zeitraum (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten) 
+        "default":
+          description: Liste der Statusergebnis für den angegebenen Host und Zeitraum (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/statuses'
-              
+                $ref: "#/components/schemas/statuses"
+
 #######################################################
 components:
   schemas:
     hosts:
       type: array
       items:
-        $ref: '#/components/schemas/host'
+        $ref: "#/components/schemas/host"
     host:
       type: object
       properties:
-        enable: 
+        enable:
           type: boolean
           example: false
           description: switch if this host should be monitored or not
-        id: 
+        id:
           type: string
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
-        name: 
+        name:
           type: string
           example: true
           description: Display name of this configuration; should say something about the expected value
-        schedule: 
+        schedule:
           type: number
           example: 60
           description: Time in seconds this host will be requested
-        protocol: 
+        protocol:
           type: string
           example: https
           description: Protocol of URI to monitor the host
-        baseUrl: 
+        baseUrl:
           type: string
           example: true
           description: Base URL of URI to monitor the host
-        url: 
+        url:
           type: string
           example: true
           description: URL of URI to monitor the host
-        method: 
+        method:
           type: string
           example: true
           description: http-method to request the host
-        ignoreSSL: 
+        ignoreSSL:
           type: boolean
           example: true
           description: if protocol = https this switch could be set to ignore self signed cetrificates
-        lastStatus: 
+        lastStatus:
           type: number
           example: 200
-          description: http-status code of last test 
-        lastStatusText: 
+          description: http-status code of last test
+        lastStatusText:
           type: string
-          example: OK 
-          description: readable http-status code of last test          
-        lastStart: 
+          example: OK
+          description: readable http-status code of last test
+        lastStart:
           type: string
           example: 2020-11-05T08:25:21.014Z
           description: timestamp of end of test
-        lastDuration: 
+        lastDuration:
           type: number
           example: 283
           description: latency of request in milli seconds
     statuses:
       type: array
       items:
-        $ref: '#/components/schemas/status'
+        $ref: "#/components/schemas/status"
     status:
       type: object
       properties:
-        txId: 
+        txId:
           type: string
           example: 14e83800-32f8-4714-98aa-d11e94892b29
           description: unique identifier of one request-transaction
-        configId: 
+        configId:
           type: string
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
-        configName: 
+        configName:
           type: string
           example: true
           description: Display name of this configuration; should say something about the expected value
-        status: 
+        status:
           type: number
           example: 200
-          description: http-status code of last test 
-        statusText: 
+          description: http-status code of last test
+        statusText:
           type: string
-          example: OK 
+          example: OK
           description: readable http-status code of last test
-        uri: 
+        uri:
           type: string
           example: https://www.zeiss.de
-          description: URI of requested host 
-        method: 
+          description: URI of requested host
+        method:
           type: string
           example: GET
-          description: http-method of last test 
-        tsStart: 
+          description: http-method of last test
+        tsStart:
           type: string
           example: 2020-11-05T08:25:20.731Z
           description: timestamp of start of test
-        tsEnd: 
+        tsEnd:
           type: string
           example: 2020-11-05T08:25:21.014Z
           description: timestamp of end of test
-        duration: 
+        duration:
           type: number
           example: 283
           description: latency of request in milli seconds
-        source: 
+        source:
           type: string
           example: TBCL01440
           description: host name where this application runs
     status-receive:
       type: object
       properties:
-        configId: 
+        configId:
           type: string
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
-        configName: 
+        configName:
           type: string
           example: true
           description: Display name of this configuration; should say something about the expected value
-        status: 
+        status:
           type: number
           example: 200
-          description: http-status code of last test 
-        statusText: 
+          description: http-status code of last test
+        statusText:
           type: string
-          example: OK 
+          example: OK
           description: readable http-status code of last test
-        uri: 
+        uri:
           type: string
           example: https://www.zeiss.de
-          description: URI of requested host 
-        method: 
+          description: URI of requested host
+        method:
           type: string
           example: GET
-          description: http-method of last test 
-        tsStart: 
+          description: http-method of last test
+        tsStart:
           type: string
           example: 2020-11-05T08:25:20.731Z
           description: timestamp of start of test
-        tsEnd: 
+        tsEnd:
           type: string
           example: 2020-11-05T08:25:21.014Z
           description: timestamp of end of test
-        duration: 
+        duration:
           type: number
           example: 283
           description: latency of request in milli seconds
-        source: 
+        source:
           type: string
           example: TBCL01440
           description: host name where this application runs
-
