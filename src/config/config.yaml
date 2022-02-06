@@ -5,21 +5,21 @@ rollbackhandling:
   latency: 600
   # expire time of a transaction in seconds (3600 = 1h)
   expire: 3600
-  
+
 # ================ Configuration of Persistance Targets (=receiver) ================
-persistenceTarget: 
+persistenceTarget:
   # ================ define the persistence target ================
   # values: DATABASE, CONSOLE, RESTFUL, FILE
   persistence: DATABASE
 
   # databaseType only makes sense if persistence = DATABASE
   # values: LOKIJS (local), MONGODB
-  databaseType: LOKIJS
+  databaseType: MONGODB
 
   # ================ definition of delete task ================
   # deleteAfterTimeUnit: time unit of deleteAfter value
-  deleteAfter: 24
-  deleteAfterTimeUnit: hours
+  deleteAfter: 10
+  deleteAfterTimeUnit: days
   # values: seconds, minutes, hours, days
   # latency: cycle time in sconds the delete job is started
   latency: 600
@@ -27,7 +27,7 @@ persistenceTarget:
   # ================ configuration for database persistence ================
   database:
     protocol: mongodb+srv
-    user: user 
+    user: user
     password: password
     uri: cluster.arj0i.mongodb.net/user?retryWrites=true&w=majority
 
@@ -43,4 +43,4 @@ persistenceTarget:
   fileendpoint:
     filename: status-events.log
     filedir: ./archive
-    maxSize: '5 MB'
+    maxSize: "5 MB"

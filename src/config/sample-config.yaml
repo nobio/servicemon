@@ -5,9 +5,9 @@ rollbackhandling:
   latency: 50
   # expire time of a transaction in seconds (3600 = 1h)
   expire: 3600
-  
+
 # ================ Configuration of Persistance Targets (=receiver) ================
-persistenceTarget: 
+persistenceTarget:
   # ================ define the persistence target ================
   # values: DATABASE, CONSOLE, RESTFUL, FILE
   persistence: CONSOLE
@@ -27,7 +27,7 @@ persistenceTarget:
   # ================ configuration for database persistence ================
   database:
     protocol: mongodb+srv
-    user: user 
+    user: user
     password: password
     uri: cluster.arj0i.mongodb.net/user?retryWrites=true&w=majority
 
@@ -43,7 +43,7 @@ persistenceTarget:
   fileendpoint:
     filename: status-events.log
     filedir: ./archive
-    maxSize: '5 MB'
+    maxSize: "5 MB"
 
 # ================ list of hosts to test ================
 # enable:     true/false activate/deactivate the test for this host
@@ -57,30 +57,30 @@ persistenceTarget:
 # schedule:   cycle time to repeat the test
 # =======================================================
 hosts:
-- enable: true
-  id: 1
-  name: Test heise.de successfully
-  protocol: https
-  method: get
-  baseUrl: www.heise.de
-  url: ""
-  ignoreSSL: false
-  schedule: 10
-- enable: true
-  id: 2
-  name: Test 404
-  protocol: https
-  method: get
-  baseUrl: www.zeiss.de
-  url: "/xyz"
-  ignoreSSL: true
-  schedule: 10
-- enable: true
-  id: 3
-  name: Test Timeout
-  protocol: https
-  method: get
-  baseUrl: www.spiegel.de:30043
-  url: "/pingX"
-  ignoreSSL: true
-  schedule: 5
+  - enable: true
+    id: 1
+    name: Test heise.de successfully
+    protocol: https
+    method: get
+    baseUrl: www.heise.de
+    url: ""
+    ignoreSSL: false
+    schedule: 10
+  - enable: true
+    id: 2
+    name: Test 404
+    protocol: https
+    method: get
+    baseUrl: www.zeiss.de
+    url: "/xyz"
+    ignoreSSL: true
+    schedule: 10
+  - enable: true
+    id: 3
+    name: Test Timeout
+    protocol: https
+    method: get
+    baseUrl: www.spiegel.de:30043
+    url: "/pingX"
+    ignoreSSL: true
+    schedule: 5

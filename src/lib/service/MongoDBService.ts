@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import moment from "moment-timezone";
 import { Document, Model, Mongoose } from "mongoose";
 import { Util } from "../api/Util";
@@ -29,12 +30,20 @@ export class MongoDBService implements DataService {
 
   private constructor() {
     try {
-      this.cfg = Util.loadConfig().database;
+      this.cfg = Util.loadConfig().persistenceTarget.database;
+      if (process.env.MONGODB_URL) {
+        this.cfg.protocol = process.env.DATABASE_MONGO_PROTOCOL;
+        this.cfg.user = process.env.MONGODB_USER;
+        this.cfg.password = process.env.MONGODB_PASSWORD;
+        this.cfg.uri = process.env.DATABASE_MONGO_URI;
+      }
 
       // connect database...
-      Log.silly(`connecting to database...`);
+      Log.silly(`connecting to mongo database ${this.cfg.protocol}://${this.cfg.user}:${this.cfg.password}@${this.cfg.uri}`);
+      console.log(`connecting to mongo database ${this.cfg.protocol}://${this.cfg.user}:${this.cfg.password}@${this.cfg.uri}`);
       const mongoConnect = `${this.cfg.protocol}://${this.cfg.user}:${this.cfg.password}@${this.cfg.uri}`;
       Log.silly(mongoConnect);
+      console.log(mongoConnect);
 
       this.mongoose.connect(mongoConnect, this.mongoOptions).then(
         () => {
@@ -42,6 +51,7 @@ export class MongoDBService implements DataService {
         },
         (err) => {
           Log.error(`error while connecting mongodb:${err}`);
+          process.exit(-1)
         },
       );
     } catch (e) {

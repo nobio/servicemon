@@ -5,10 +5,10 @@ import { PersistenceTarget } from "./PersistenceTarget";
 import { Log } from "../api/Log";
 
 export interface MongoDBConfig {
-  protocol: string,
-  user: string;
-  password: string;
-  uri: string;
+  protocol: string | undefined;
+  user: string | undefined;
+  password: string | undefined;
+  uri: string | undefined;
 }
 
 export class DatabaseTarget implements PersistenceTarget {

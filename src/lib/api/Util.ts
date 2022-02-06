@@ -195,7 +195,7 @@ export class Util {
       target = `${__dirname}/../../config/config.yaml`;
     }
 
-    Log.info(`loading config ${target}`);
+    Log.debug(`loading config ${target}`);
     return yml.load(target, 'utf8');
   }
 
@@ -208,7 +208,7 @@ export class Util {
       target = `${__dirname}/../../config/config-hosts.yaml`;
     }
 
-    Log.info(`loading config ${target}`);
+    Log.debug(`loading config ${target}`);
     const config = yml.load(target, 'utf8');
 
     return config
