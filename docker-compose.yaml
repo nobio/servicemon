@@ -7,8 +7,8 @@ services:
     environment:
     - MONGODB_USER=httpstatus-user
     - MONGODB_PASSWORD=a57XDbVIlpVHNjuF
-    - DATABASE_MONGO_URI=nobiocluster.arj0i.mongodb.net/http-status?retryWrites=true&w=majority
-    - DATABASE_MONGO_PROTOCOL=mongodb+srv
+    - MONGODB_URI=nobiocluster.arj0i.mongodb.net/http-status?retryWrites=true&w=majority
+    - MONGODB_PROTOCOL=mongodb+srv
     #volumes:
     ports:
       - "28090:28090"
