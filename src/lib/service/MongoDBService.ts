@@ -31,11 +31,14 @@ export class MongoDBService implements DataService {
   private constructor() {
     try {
       this.cfg = Util.loadConfig().persistenceTarget.database;
-      if (process.env.MONGODB_URL) {
-        this.cfg.protocol = process.env.DATABASE_MONGO_PROTOCOL;
+      if (process.env.MONGODB_PROTOCOL
+        && process.env.MONGODB_USER
+        && process.env.MONGODB_PASSWORD
+        && process.env.MONGODB_URI) {
+        this.cfg.protocol = process.env.MONGODB_PROTOCOL;
         this.cfg.user = process.env.MONGODB_USER;
         this.cfg.password = process.env.MONGODB_PASSWORD;
-        this.cfg.uri = process.env.DATABASE_MONGO_URI;
+        this.cfg.uri = process.env.MONGODB_URI;
       }
 
       // connect database...

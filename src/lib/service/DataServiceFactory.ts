@@ -1,6 +1,6 @@
 import { Configuration, PersistenceConfig } from "../model/Config";
 import { DataService } from "./DataService";
-import { LokijsDBService } from "./LokijsDBService";
+//import { LokijsDBService } from "./LokijsDBService";
 import { MongoDBService } from "./MongoDBService";
 
 export class DataServiceFactory {
@@ -18,12 +18,14 @@ export class DataServiceFactory {
       case 'MONGODB':
         this.dataService = MongoDBService.getInstance();
         break;
-      case 'LOKIJS':
-        this.dataService = LokijsDBService.getInstance();
-        break;
+      /*
+            case 'LOKIJS':
+              this.dataService = LokijsDBService.getInstance();
+              break;
 
+      */
       default:
-        this.dataService = LokijsDBService.getInstance();
+        this.dataService = MongoDBService.getInstance();
         break;
     }
   }
