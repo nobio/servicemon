@@ -32,13 +32,16 @@ export class Scheduler {
         // load configuration and start for each object a task
         this.cfg.hostsConfigs.forEach((cfg: HostConfig) => {
             if (cfg.enable) {
-                Log.info(` > starting scheduler every ${cfg.schedule} sec for ${cfg.name}`);
+                Log.info(` > starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
                 // initial call...
                 this.invoke(cfg);
                 // ... periodical call
-                setInterval(() => {
-                    this.invoke(cfg);
-                }, (cfg.schedule * 1000));
+                // ... initialize this thread with numbers of concurrent instances
+                for (let n = 0; n < cfg.concurrent; n++) {
+                    setInterval(() => {
+                        this.invoke(cfg);
+                    }, (cfg.schedule * 1000));
+                };
             }
         });
 

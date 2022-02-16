@@ -10,6 +10,7 @@ export class HostConfig {
    public method: string = "";
    public ignoreSSL: boolean = true;
    public headers: string = "";
+   public concurrent: number = 0;
 
    constructor() { }
 

@@ -66,6 +66,7 @@ hosts:
     url: ""
     ignoreSSL: false
     schedule: 10
+    concurrent: 1
   - enable: true
     id: 2
     name: Test 404
@@ -75,6 +76,7 @@ hosts:
     url: "/xyz"
     ignoreSSL: true
     schedule: 10
+    concurrent: 1
   - enable: true
     id: 3
     name: Test Timeout
@@ -84,3 +86,4 @@ hosts:
     url: "/pingX"
     ignoreSSL: true
     schedule: 5
+    concurrent: 1

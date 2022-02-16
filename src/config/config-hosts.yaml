@@ -11,21 +11,23 @@
 # schedule:   cycle time to repeat the test
 # =======================================================
 hosts:
-- enable: true
-  id: 1
-  name: Test timetracker successfully
-  protocol: https
-  method: get
-  baseUrl: nobio.myhome-server.de
-  url: /timetracker/
-  ignoreSSL: false
-  schedule: 60
-- enable: true
-  id: 2
-  name: Test nextcloud successfully
-  protocol: https
-  method: get
-  baseUrl: nobio.myhome-server.de
-  url: /nextcloud/
-  ignoreSSL: false
-  schedule: 60
+  - enable: true
+    id: 1
+    name: Test timetracker successfully
+    protocol: https
+    method: get
+    baseUrl: nobio.myhome-server.de
+    url: /timetracker/
+    ignoreSSL: false
+    schedule: 10
+    concurrent: 1
+  - enable: true
+    id: 2
+    name: Test nextcloud successfully
+    protocol: https
+    method: get
+    baseUrl: nobio.myhome-server.de
+    url: /nextcloud/
+    ignoreSSL: false
+    schedule: 60
+    concurrent: 1
