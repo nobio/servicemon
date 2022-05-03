@@ -40,7 +40,7 @@ export class Scheduler {
                 for (let n = 0; n < cfg.concurrent; n++) {
                     setInterval(() => {
                         this.invoke(cfg);
-                    }, (cfg.schedule * 1000));
+                    }, (cfg.schedule * 1000 + this.variance(cfg.schedule * 1000)));
                 };
             }
         });
@@ -58,6 +58,17 @@ export class Scheduler {
     }
 
     /**
+     * calculates a random number of +/- 10% of the given base
+     * @param base
+     */
+    private variance(base: number) {
+        const intervalAbs = base * 10 / 100;  // 10%
+        const rnd = Math.random() - 0.5;
+        console.log(base, intervalAbs, rnd, intervalAbs * rnd);
+        return intervalAbs * rnd;
+    }
+
+    /**
     * invokes
     * @param cfg configuration
     */
@@ -69,7 +80,7 @@ export class Scheduler {
             url: cfg.url,
             method: cfg.method,
             baseURL: cfg.protocol + '://' + cfg.baseUrl,
-            timeout: 2000,
+            timeout: 20000,
             httpsAgent: new https.Agent({ rejectUnauthorized: !cfg.ignoreSSL }),
             headers: cfg.headers
         }
@@ -121,7 +132,7 @@ export class Scheduler {
                         output.statusText = 'No internet connection';
                         break;
                     default:
-                        output.status = 500;
+                        output.status = 501;
                         output.statusText = resp.code;
                         break;
                 }

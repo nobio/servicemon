@@ -89,21 +89,9 @@ export class Util {
    * @param res
    */
   public async getWatchedHostsWithLastStatus(req: Request, res: Response) {
-    let workspace: any = req.query['workspace'];
     const hostConfigs: HostConfig[] = Configuration.getInstance().hostsConfigs;
 
-    let hostCfg: HostConfig[] = [];
-
-    // if workspace-filter was given, filter hosts regarding their workspace parameter
-    if (workspace) {
-      hostConfigs.forEach(host => {
-        if (host.workspace.indexOf(workspace) != -1) {
-          hostCfg.push(host);
-        }
-      });
-    } else {
-      hostCfg = hostConfigs.map((hsot) => hsot);  // copy hostConfig array, do not use the reference
-    }
+    let hostCfg: HostConfig[] = hostConfigs.map((hsot) => hsot);
 
     // ger actual data from database
     new Promise((resolve, reject) => {

@@ -14,7 +14,7 @@ persistenceTarget:
 
   # databaseType only makes sense if persistence = DATABASE
   # values: LOKIJS (local), MONGODB
-  databaseType: MONGODB
+  databaseType: LOKIJS
 
   # ================ definition of delete task ================
   # deleteAfterTimeUnit: time unit of deleteAfter value
@@ -27,8 +27,8 @@ persistenceTarget:
   # ================ configuration for database persistence ================
   database:
     protocol: mongodb+srv
-    user: user
-    password: password
+    user: <user>
+    password: <password>
     uri: cluster.arj0i.mongodb.net/user?retryWrites=true&w=majority
 
   # ================ configuration for restful persistence ================

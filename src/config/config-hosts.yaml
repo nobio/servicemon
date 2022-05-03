@@ -12,8 +12,8 @@
 # =======================================================
 hosts:
   - enable: true
-    id: 1
-    name: Test timetracker successfully
+    id: 10
+    name: Test timetracker
     protocol: https
     method: get
     baseUrl: nobio.myhome-server.de
@@ -22,8 +22,18 @@ hosts:
     schedule: 10
     concurrent: 1
   - enable: true
-    id: 2
-    name: Test nextcloud successfully
+    id: 11
+    name: Test timetracker api healthcheck
+    protocol: https
+    method: get
+    baseUrl: nobio.myhome-server.de
+    url: /api/health
+    ignoreSSL: false
+    schedule: 60
+    concurrent: 1
+  - enable: true
+    id: 20
+    name: Test nextcloud
     protocol: https
     method: get
     baseUrl: nobio.myhome-server.de

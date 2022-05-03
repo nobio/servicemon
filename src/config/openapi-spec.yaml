@@ -60,14 +60,6 @@ paths:
       tags:
         - hosts
       summary: Liefert alle Hosts mit deren Konfiguration
-      parameters:
-        - name: workspace
-          in: query
-          description: optional filter for hosts assigned to certain workspace
-          required: false
-          schema:
-            type: string
-          example: intern
       responses:
         "default":
           description: Liste über alle konfigurierten Hosts
