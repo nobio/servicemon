@@ -1,4 +1,4 @@
-FROM node:16
+#FROM node:16
 #FROM arm32v7/node:latest
 WORKDIR /opt/servicemon
 

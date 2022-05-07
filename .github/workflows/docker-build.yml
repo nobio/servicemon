@@ -36,7 +36,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: nobio/servicemon:latest
           platforms: linux/x86, linux/amd64, linux/arm64/v7
+          tags: |
+            ghcr.io/${{github.repository}}:latest
+            ghcr.io/${{github.repository}}:${{steps.version.outputs.date_version}}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
