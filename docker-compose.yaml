@@ -4,7 +4,9 @@ services:
     container_name: servicemon
     restart: always
     image: nobio/servicemon:latest
+    platform: linux/arm/v7
     environment:
+    - DEBUGLEVEL=info
     - MONGODB_USER=httpstatus-user
     - MONGODB_PASSWORD=a57XDbVIlpVHNjuF
     - MONGODB_URI=nobiocluster.arj0i.mongodb.net/http-status?retryWrites=true&w=majority
