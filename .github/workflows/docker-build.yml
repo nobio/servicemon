@@ -19,6 +19,9 @@ jobs:
         run: |
           output=$(date -u '+%Y-%m-%d_%H%M%S')
           echo ::set-output name=date_version::$output
+      - name: Debugging
+        run: echo nobio/${{github.repository}}:${{steps.version.outputs.date_version}}
+
       - name: Set up QEMU dependency
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
