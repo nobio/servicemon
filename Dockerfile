@@ -1,5 +1,5 @@
-#FROM node:16
-FROM arm64v7/node:latest
+FROM node:16
+#FROM arm64v7/node:latest
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
