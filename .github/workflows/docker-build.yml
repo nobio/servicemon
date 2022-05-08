@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Modify scripts and get version
+        id: version
+        run: |
+          output=$(date -u '+%Y%m%d%H%M%S')
+          echo ::set-output name=date_version::$output
       - name: Set up QEMU dependency
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -34,11 +39,12 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./
+          file: ./Dockerfile
+          platforms: linux/amd64, linux/arm64, linux/arm/v7
           push: true
-          platforms: linux/x86, linux/amd64, linux/arm64/v7
           tags: |
-            ghcr.io/${{github.repository}}:latest
-            ghcr.io/${{github.repository}}:${{steps.version.outputs.date_version}}
+            nobio/${{github.repository}}:latest
+            nobio/${{github.repository}}:${{steps.version.outputs.date_version}}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
