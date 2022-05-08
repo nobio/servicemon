@@ -19,7 +19,7 @@ hosts:
     baseUrl: nobio.myhome-server.de
     url: /timetracker/
     ignoreSSL: false
-    schedule: 10
+    schedule: 60
     concurrent: 1
   - enable: true
     id: 11
