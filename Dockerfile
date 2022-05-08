@@ -9,6 +9,7 @@ COPY src /opt/servicemon/src
 
 RUN npm ci
 RUN npm run build --production
+RUN rm -rf ./src
 
 # create database files (lokijs) and fix access rights
 RUN touch monitor.db monitor.db.0

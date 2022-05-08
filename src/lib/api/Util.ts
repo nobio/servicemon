@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import moment from "moment";
-import { Error } from "mongoose";
 import { Configuration } from "../model/Config";
 import { HostConfig } from "../model/HostConfig";
 import { HostConfigStatus } from "../model/HostConfigStatus";
@@ -14,7 +13,6 @@ import { Log } from "./Log";
 const yml = require('yml');
 
 export class Util {
-  constructor() { }
 
   /**
    *
