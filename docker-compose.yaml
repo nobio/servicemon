@@ -4,6 +4,7 @@ services:
     container_name: servicemon
     restart: always
     image: nobio/servicemon:latest
+    platform: linux/arm/v7
     environment:
     - MONGODB_USER=httpstatus-user
     - MONGODB_PASSWORD=a57XDbVIlpVHNjuF
