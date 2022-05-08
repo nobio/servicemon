@@ -20,7 +20,7 @@ jobs:
           output=$(date -u '+%Y-%m-%d_%H%M%S')
           echo ::set-output name=date_version::$output
       - name: Debugging
-        run: echo nobio/${{github.repository}}:${{steps.version.outputs.date_version}}
+        run: echo nobio/servicemon:${{steps.version.outputs.date_version}}
 
       - name: Set up QEMU dependency
         uses: docker/setup-qemu-action@v2
@@ -40,7 +40,7 @@ jobs:
           platforms: linux/amd64, linux/arm64
           push: true
           tags: |
-            nobio/${{github.repository}}:latest
-            nobio/${{github.repository}}:${{steps.version.outputs.date_version}}
+            nobio/servicemon:latest
+            nobio/servicemon:${{steps.version.outputs.date_version}}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
