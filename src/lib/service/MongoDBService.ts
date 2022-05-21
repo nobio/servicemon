@@ -20,12 +20,8 @@ export class MongoDBService implements DataService {
   private cfg: MongoDBConfig;
 
   private mongoOptions: Object = {
-    poolSize: 5,
-    keepAlive: 120,
-    useCreateIndex: true,
+    keepAlive: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
   }
 
   private constructor() {
