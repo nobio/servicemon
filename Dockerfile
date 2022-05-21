@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
@@ -6,14 +6,6 @@ COPY package*.json ./
 COPY tsconfig.json ./
 # copy source code to /usr/src/app folder
 COPY src /opt/servicemon/src
-
-# Install python/pip
-ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
-RUN apk add python3 g++ make
-RUN apk add make
 
 RUN npm ci
 RUN npm run build --production
