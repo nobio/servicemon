@@ -155,15 +155,14 @@ export class MongoDBService implements DataService {
     Log.silly(params);
     const dtEnd = moment(params.tsStart);
     const dtStart = moment(params.tsStart).subtract(params.countTimeUnits, params.timeUnit);
-    Log.silly(`von ${dtStart} bis ${dtEnd}`);
+    Log.silly(`von ${dtEnd} bis ${dtStart}`);
 
     return new Promise<Array<Output>>((resolve, reject) => {
       this.HttpStatusEvent
         .find({
           configId: params.configId,
-          $and: [{ tsStart: { $gte: dtStart } }, { tsStart: { $gte: dtEnd } }],
+          $and: [{ tsStart: { $gte: dtStart } }, { tsStart: { $lte: dtEnd } }],
         })
-        .limit(params.countTimeUnits)
         .select({
           "class": 1,
           "tsStart": 1,

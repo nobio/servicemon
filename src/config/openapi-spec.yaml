@@ -144,6 +144,15 @@ paths:
           required: true
           schema:
             type: number
+        - name: start
+          in: query
+          description: start timestamp from which the time series is loaded; if not required, the actual time stamp is taken by default
+          required: false
+          schema:
+            type: string
+            example: 2020-11-05T08:25:21.014Z
+            description: timestamp of end of test
+
       responses:
         "default":
           description: Liste der Statusergebnis für den angegebenen Host und Zeitraum (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)

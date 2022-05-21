@@ -153,7 +153,7 @@ export class Util {
     if (!req.query['count']) { res.status(500).json({ 'error': 'please provide count' }); return; }
     //    if (!req.query['start']) { res.status(500).json({ 'error': 'please provide start' }); return; }
     if (!req.query['start']) {
-      req.query.start = moment().format('YYYY-MM-DD');
+      req.query.start = moment().toISOString();
     }
 
     const params: TimeseriesParams = {
