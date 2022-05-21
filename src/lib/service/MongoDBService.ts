@@ -163,6 +163,7 @@ export class MongoDBService implements DataService {
           configId: params.configId,
           $and: [{ tsStart: { $gte: dtStart } }, { tsStart: { $gte: dtEnd } }],
         })
+        .limit(params.countTimeUnits)
         .select({
           "class": 1,
           "tsStart": 1,
