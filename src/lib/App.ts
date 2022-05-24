@@ -35,6 +35,7 @@ export class App {
     app.get('/api/queue/:configId/status', this.api.getLastStatus);
     app.get('/api/queue/:configId/timeseries/:timeUnit', this.api.getTimeSeries);
 
+    app.get('/api', this.api.monitor);
     app.get('/api/search', this.api.monitor);
     app.get('/api/query', this.api.monitor);
     app.get('/api/annotations', this.api.monitor);
