@@ -1,5 +1,4 @@
-//process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import moment from 'moment';
 import { Configuration } from './model/Config';
 import { Output } from './model/Output';
@@ -17,7 +16,7 @@ const axios = require('axios');
  */
 export class Scheduler {
 
-    private cfg: Configuration = Configuration.getInstance();;
+    private cfg: Configuration = Configuration.getInstance();
     private httpCodes: HttpStatusCodes = new HttpStatusCodes();
 
     constructor() {
@@ -32,7 +31,7 @@ export class Scheduler {
         // load configuration and start for each object a task
         this.cfg.hostsConfigs.forEach((cfg: HostConfig) => {
             if (cfg.enable) {
-                Log.info(` > starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
+                Log.info(`| >   starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
                 // initial call...
                 this.invoke(cfg);
                 // ... periodical call
@@ -41,17 +40,17 @@ export class Scheduler {
                     setInterval(() => {
                         this.invoke(cfg);
                     }, (cfg.schedule * 1000 + this.variance(cfg.schedule * 1000)));
-                };
+                }
             }
         });
 
         // start delete handler
         setInterval(() => {
-            Log.info(` > deleting old records...`);
+            Log.info(`| >   deleting old records...`);
             PersistenceTargetFactory.getInstance().getPersistenceTarget().deleteRecords(
                 this.cfg.peristenceConfig.deleteAfter,
                 this.cfg.peristenceConfig.deleteAfterTimeUnit)
-                .then(res => Log.info(` > ${res} records deleted`))
+                .then(res => Log.info(`| >   ${res} records deleted`))
                 .catch(err => Log.error(err));
         }, (this.cfg.peristenceConfig.latency * 1000));
 
@@ -64,7 +63,6 @@ export class Scheduler {
     private variance(base: number) {
         const intervalAbs = base * 10 / 100;  // 10%
         const rnd = Math.random() - 0.5;
-        console.log(base, intervalAbs, rnd, intervalAbs * rnd);
         return intervalAbs * rnd;
     }
 
@@ -73,7 +71,7 @@ export class Scheduler {
     * @param cfg configuration
     */
     private invoke(cfg: HostConfig) {
-        Log.debug(` > ${moment().format()} Invoking '${cfg.name}' - ${cfg.protocol}://${cfg.baseUrl}${cfg.url}`);
+        Log.debug(`| >   Invoking '${cfg.name}' - ${cfg.protocol}://${cfg.baseUrl}${cfg.url}`);
 
         const start = moment().valueOf();
         const options = {
@@ -86,15 +84,15 @@ export class Scheduler {
         }
 
         axios(options)
-            .then((res: any) => this.trace(true, res, cfg.id, cfg.name, start))
-            .catch((res: any) => this.trace(false, res, cfg.id, cfg.name, start));
+            .then((res: unknown) => this.trace(true, res, cfg.id, cfg.name, start))
+            .catch((res: unknown) => this.trace(false, res, cfg.id, cfg.name, start));
     }
 
     /**
     * Export a trace (now to console, later to database)
     */
     trace(success: boolean, resp: any, id: string, name: string, startTimestamp: number) {
-        let output: Output = new Output();
+        const output: Output = new Output();
         output.configId = id;
         output.configName = name;
         Log.silly(resp.data)

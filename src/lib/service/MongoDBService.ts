@@ -19,7 +19,7 @@ export class MongoDBService implements DataService {
   private HttpStatusEvent: Model<Document>;
   private cfg: MongoDBConfig;
 
-  private mongoOptions: Object = {
+  private mongoOptions = {
     keepAlive: true,
     useNewUrlParser: true,
   }
@@ -92,7 +92,7 @@ export class MongoDBService implements DataService {
   // *********************************************************************************** //
   public async saveHttpStatus(out: Output): Promise<boolean> {
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       new this.HttpStatusEvent({
         txId: out.txId,
         configId: out.configId,
@@ -106,7 +106,7 @@ export class MongoDBService implements DataService {
         tsExpire: moment(out.tsExpire).toDate(),
         duration: out.duration,
         source: out.source,
-      }).save((err: any) => {
+      }).save((err) => {
         if (err) {
           Log.error(err);
           resolve(false);
@@ -120,14 +120,12 @@ export class MongoDBService implements DataService {
   }
 
   public async getLastEntry(configId: string): Promise<Output> {
-
     return new Promise((resolve, reject) => {
       if (!configId) reject('please provide a configuration id configId');
 
       this.HttpStatusEvent.findOne({ configId }).sort({ tsStart: 'desc' })
         .then((res: any) => {
           const out: Output = new Output();
-
           out.txId = res['txId'];
           out.configId = res['configId'];
           out.configName = res['configName'];
@@ -143,7 +141,7 @@ export class MongoDBService implements DataService {
 
           resolve(out);
         })
-        .catch((err: any) => reject(err))
+        .catch((err) => reject(err))
     });
   }
 
@@ -173,7 +171,7 @@ export class MongoDBService implements DataService {
         })
         .sort({ tsStart: 1 })
         .then((ts: any) => resolve(ts))
-        .catch((err: any) => reject(err))
+        .catch((err) => reject(err))
     });
   }
 
@@ -182,8 +180,8 @@ export class MongoDBService implements DataService {
 
     return new Promise((resolve, reject) => {
       this.HttpStatusEvent.deleteMany({ tsStart: { $lte: timestamp } })
-        .then((res: any) => resolve(res['deletedCount']))
-        .catch((err: any) => reject(err))
+        .then((res) => resolve(res['deletedCount']))
+        .catch((err) => reject(err))
     });
   }
 

@@ -49,7 +49,7 @@ export class API {
         'exampple': 'curl -X GET "http://<host>:<port>/api/queue/2ae3e900-4cb3-43d7-aa52-1d4c0a066ea2/timeseries/days?start=2020-09-01&count=100"',
       },
     ]);
-  };
+  }
 
   /**
    *
@@ -76,7 +76,7 @@ export class API {
     dbTarget.persist(o)
       .then(result => res.status(200).send(result))
       .catch(result => res.status(500).send(result))
-  };
+  }
 
   /**
    * load hosts configuration incl. last measurements
@@ -86,7 +86,7 @@ export class API {
   public async getWatchedHostsWithLastStatus(req: Request, res: Response) {
     const hostConfigs: HostConfig[] = Configuration.getInstance().hostsConfigs;
 
-    let hostCfg: HostConfig[] = hostConfigs.map((hsot) => hsot);
+    const hostCfg: HostConfig[] = hostConfigs.map((hsot) => hsot);
 
     // ger actual data from database
     new Promise((resolve, reject) => {
@@ -121,7 +121,7 @@ export class API {
   public async getWatchedHosts(req: Request, res: Response) {
     const hostConfigs = Configuration.getInstance().hostsConfigs;
     res.status(200).json(hostConfigs);
-  };
+  }
 
   /**
    * curl -X GET http://localhost:28090/api/queue/xxxxxxxx-4533-43d7-aa52-1d4c0a066ea2/status
@@ -134,7 +134,6 @@ export class API {
     DataServiceFactory.getInstance().getDatService().getLastEntry(req.params['configId'])
       .then((ts: Output) => res.status(200).json(ts))
       .catch((err: Error) => res.status(500).send(err.message + err.stack));
-
   }
 
   /**
@@ -167,19 +166,89 @@ export class API {
 
   /**
    * implements Grafana "search" endpoint; see https://grafana.com/grafana/plugins/grafana-simple-json-datasource/
-   * @param req
-   * @param res
+   * curl -X POST http://localhost:28090/api/search
+   *
+   * @param req: /search => { target: '' }
+   * @param res: [host1, host2, host3] (Liste der Hostsnamen. Diese können im Query-Dialog ausgewählt werden)
    */
   public grafanaSearch(req: Request, res: Response) {
-
+    const resp: string[] = Configuration.getInstance().hostsConfigs.map(cfg => cfg.name);
+    res.status(200).json(resp);
   }
 
-  public grafanaQuery(req: Request, res: Response) {
+  /**
+   *
+   * @param req
+   * wichtig:
+   * - req.body.range.from und req.body.range.to
+   * - targets wird leer sein. Wenn es mehre
+    {
+      app: 'dashboard',
+      requestId: 'Q4076',
+      timezone: 'browser',
+      panelId: 2,
+      dashboardId: 6,
+      range: {
+        from: '2022-05-24T04:11:57.425Z',
+        to: '2022-05-24T16:11:57.425Z',
+        raw: { from: 'now-12h', to: 'now' }
+      },
+      timeInfo: '',
+      interval: '1m',
+      intervalMs: 60000,
+      targets: [
+        { target: 'upper_25', refId: 'A', type: 'timeserie' },
+        { target: 'upper_50', refId: 'B', hide: false, type: 'timeserie' },
+        { target: 'upper_75', refId: 'C', hide: false, type: 'timeserie' }
+      ],
+      maxDataPoints: 676,
+      scopedVars: {
+        __interval: { text: '1m', value: '1m' },
+        __interval_ms: { text: '60000', value: 60000 }
+      },
+      startTime: 1653408717425,
+      rangeRaw: { from: 'now-12h', to: 'now' },
+      adhocFilters: []
+    }
 
+   * @param res Die Arrays in datapoints sind Tupel, bestehend aus einem Wert und einem Zeitstempel:
+    ...[3,1653398974000],[2,1653399024000]...
+    [
+      {
+        target: 'upper_25',
+        datapoints: [
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array],
+          ... 105 more items
+        ]
+      },
+      {
+        target: 'upper_50',
+        datapoints: [
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          ... 105 more items
+        ]
+      },
+      {
+        target: 'upper_75',
+        datapoints: [
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array], [Array], [Array], [Array], [Array], [Array],
+          [Array], [Array],
+          ... 105 more items
+        ]
+      }
+    ]
+   */
+  public grafanaQuery(req: Request, res: Response) {
+    res.json(200).end();
   }
 
   public grafanaAnnotations(req: Request, res: Response) {
-
+    res.json(200).end();
   }
 
   public monitor(req: Request, res: Response): void {
@@ -199,7 +268,7 @@ export class API {
     if (Object.keys(req.headers).length) resp.headers = req.headers;
     if (Object.keys(req.body).length) resp.body = req.body;
 
-    Log.silly(JSON.stringify(resp));
+    Log.info(JSON.stringify(resp));
 
     res.status(200).json(resp);
 

@@ -1,6 +1,6 @@
-import { Log } from "./Log";
-
+/* eslint @typescript-eslint/no-var-requires: "off" */
 const yml = require('yml');
+import { Log } from "./Log";
 
 export class Util {
 

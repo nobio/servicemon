@@ -1,14 +1,13 @@
-import cors from "cors";
+import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import morgan from "morgan";
-import { Util } from "./api/Util";
+import morgan from 'morgan';
 import { API } from "./api/API";
+import { Log } from "./api/Log";
 import { EventListener } from "./EventListener";
 import { RollbackHandler } from "./RollbackHandler";
 import { Scheduler } from "./Scheduler";
 import { DataServiceFactory } from "./service/DataServiceFactory";
-import { Log } from "./api/Log";
 
 const app = express();
 
@@ -36,7 +35,7 @@ export class App {
     app.get('/api/queue/:configId/timeseries/:timeUnit', this.api.getTimeSeries);
 
     app.get('/api', this.api.monitor);
-    app.post('/api/search', this.api.monitor);
+    app.post('/api/search', this.api.grafanaSearch);
     app.post('/api/query', this.api.monitor);
     app.post('/api/annotations', this.api.monitor);
     // ------------------ SERVER ---------------------------------------------

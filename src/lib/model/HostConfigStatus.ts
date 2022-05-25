@@ -3,24 +3,22 @@ import { HostConfig } from "./HostConfig";
 import { Output } from "./Output";
 
 export class HostConfigStatus {
-   public enable: boolean = false;
-   public workspace: string = "";
-   public id: string = "";
-   public name: string = "";
-   public schedule: number = 0;
-   public method: string = "";
-   public protocol: string = "";
-   public baseUrl: string = "";
-   public url: string = "";
-   public uri: string = "";
-   public ignoreSSL: boolean = true;
-   public headers: string = '';
-   public lastStatus: number = 0;
-   public lastStatusText: string = '';
+   public enable = false;
+   public workspace = "";
+   public id = "";
+   public name = "";
+   public schedule = 0;
+   public method = "";
+   public protocol = "";
+   public baseUrl = "";
+   public url = "";
+   public uri = "";
+   public ignoreSSL = true;
+   public headers = '';
+   public lastStatus = 0;
+   public lastStatusText = '';
    public lastStart: string = moment().format('MM-DD-YY[T]HH:mm[Z]SSS');
-   public lastDuration: number = 0;
-
-   constructor() { }
+   public lastDuration = 0;
 
    public setHostConfig(cfg: HostConfig): void {
       this.enable = cfg.enable;

@@ -32,16 +32,18 @@ export class DatabaseTarget implements PersistenceTarget {
   }
 
   persist(out: Output): Promise<boolean> {
-    Log.debug('/=================DATABASE============================================================\\')
+    Log.debug('/=================DATABASE============================================================\\');
     Log.info(`"${out.configName}" (${out.configId}) -> ${out.status} (${out.statusText}) ${out.txId}`);
-    Log.debug('\\=====================================================================================/')
+    Log.debug('\\=====================================================================================/');
 
     return DataServiceFactory.getInstance().getDatService().saveHttpStatus(out);
   }
 
+  /* eslint @typescript-eslint/no-unused-vars: "off" */
   deleteRecords(hours: number): Promise<number> {
-    Log.debug('/==================DELETE-RECORDS=====================================================\\')
-    Log.debug('\\=====================================================================================/')
+    Log.debug('/==================DELETE-RECORDS=====================================================\\');
+    Log.debug(`     delete ${hours} hours`);
+    Log.debug('\\=====================================================================================/');
     return DataServiceFactory.getInstance().getDatService().deleteOldEntries(
       this.persistCfg.deleteAfter,
       this.persistCfg.deleteAfterTimeUnit

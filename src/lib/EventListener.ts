@@ -23,7 +23,7 @@ export class EventListener {
     Log.debug('init EventListener');
 
     // this callback code runs every time, an event has been emitted
-    this.queueHandler.on('push', output => {
+    this.queueHandler.on('push', () => {
 
       //Log.info(`here it comes: ${output.txId}`)
       while (this.queueHandler.hasItems()) {
@@ -37,7 +37,10 @@ export class EventListener {
               this.queueHandler.rollback(out.txId);
             }
           })
-          .catch(fail => this.queueHandler.rollback(out.txId))
+          .catch(fail => {
+            Log.error(fail);
+            this.queueHandler.rollback(out.txId)
+          })
       }
 
     });
@@ -48,7 +51,7 @@ export class EventListener {
     });
     // event handler for commit-all
     this.queueHandler.on('commit-all', out => {
-      Log.debug(`commit-all`);
+      Log.debug(`commit-all ${out['txId']}`);
     });
 
     // event handler for rollback
@@ -58,7 +61,7 @@ export class EventListener {
 
     // event handler for rollback-all
     this.queueHandler.on('rollback-all', out => {
-      Log.info(`rollback-all`)
+      Log.info(`rollback - all ${out['txId']}`)
     });
   }
 }

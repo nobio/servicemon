@@ -1,3 +1,5 @@
+/* eslint no-cond-assign: "off" */
+
 import { Util } from "./api/Util";
 import { Output } from "./model/Output";
 import { TxQueue } from "./TxQueue";
@@ -39,7 +41,7 @@ export class RollbackHandler {
 
   private checkRolledBackEvents(): void {
     let txId: string;
-    let outAny: any;
+    let outAny: Output | undefined;
     const eventList: Array<Output> = new Array<Output>();
 
     Log.debug('***************** ROLLBACK HANDLER ***********************')
@@ -47,13 +49,13 @@ export class RollbackHandler {
     while (txId = this.txMap.keys().next().value) {
       outAny = this.txMap.get(txId);
       this.txMap.delete(txId)
-      const out: Output = outAny;
+      const out: Output | undefined = outAny;
 
-      if (out.hasExpired()) {  // event has expired -> dead letter file
+      if (out && out.hasExpired()) {  // event has expired -> dead letter file
         Log.info(`È X P I R E D !!!\n ${txId}`);
       } else {                    // not yet expired -> put it back to normal queue
         Log.info(`${txId} has not expired yet. Back to queue`);
-        eventList.push(out);
+        if (out) eventList.push(out);
       }
 
     }
