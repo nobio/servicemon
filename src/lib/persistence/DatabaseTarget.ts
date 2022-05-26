@@ -24,7 +24,7 @@ export class DatabaseTarget implements PersistenceTarget {
   }
 
   public static getInstance(): PersistenceTarget {
-    Log.silly('persistence target is DatabaseTarget');
+    Log.info('persistence target is DatabaseTarget');
     if (!DatabaseTarget.instance) {
       DatabaseTarget.instance = new DatabaseTarget();
     }
