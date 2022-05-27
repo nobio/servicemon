@@ -35,9 +35,9 @@ export class App {
     app.get('/api/queue/:configId/timeseries/:timeUnit', this.api.getTimeSeries);
 
     app.get('/api', this.api.monitor);
-    app.post('/api/search', this.api.grafanaSearch);
-    app.post('/api/query', this.api.monitor);
-    app.post('/api/annotations', this.api.monitor);
+    app.all('/api/search', this.api.grafanaSearch);
+    app.all('/api/query', this.api.grafanaQuery);
+    app.all('/api/annotations', this.api.monitor);
     // ------------------ SERVER ---------------------------------------------
     // start the web service with http
     // -----------------------------------------------------------------------

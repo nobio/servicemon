@@ -119,6 +119,41 @@ export class LokijsDBService implements DataService {
         })
     }
 
+    public getTimeSeriesStartEnd(configId: string, tsStart: string, tsEnd: string): Promise<Array<Output>> {
+        const response: Output[] = new Array<Output>();
+        //Log.info(params);
+        const dtEnd = moment(tsEnd);
+        const dtStart = moment(tsStart);
+        Log.silly(`von ${dtStart} bis ${dtEnd}`);
+
+        return new Promise((resolve) => {
+            const res = this.httpStatusEvents.chain().find({
+                configId,
+                tsStart: { $gt: dtStart },
+                tsEnd: { $lte: dtEnd },
+            }).simplesort('tsStart', true).data();
+
+            res.forEach(itm => {
+                const out = new Output();
+                out.txId = itm['txId'];
+                out.configId = itm['configId'];
+                out.configName = itm['configName'];
+                out.status = itm['status'];
+                out.statusText = itm['statusText'];
+                out.uri = itm['uri'];
+                out.method = itm['method'];
+                out.tsStart = itm['tsStart'];
+                out.tsEnd = itm['tsEnd'];
+                out.duration = itm['duration'];
+                out.source = itm['source'];
+
+                response.push(out);
+            });
+
+            resolve(response);
+        })
+    }
+
     public deleteOldEntries(hours: number, timeUnit: TIME_UNIT): Promise<number> {
         const timestamp = moment().subtract(hours, timeUnit);
         Log.silly(timestamp)

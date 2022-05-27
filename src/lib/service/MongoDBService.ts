@@ -175,6 +175,32 @@ export class MongoDBService implements DataService {
     });
   }
 
+  public getTimeSeriesStartEnd(configId: string, tsStart: string, tsEnd: string): Promise<Array<Output>> {
+    Log.silly(`configId: ${configId}, tsStart: ${tsStart}, tsEnd: ${tsEnd}`);
+    const dtEnd = moment(tsEnd);
+    const dtStart = moment(tsStart);
+    Log.silly(`von ${dtEnd} bis ${dtStart}`);
+
+    return new Promise<Array<Output>>((resolve, reject) => {
+      this.HttpStatusEvent
+        .find({
+          configId,
+          $and: [{ tsStart: { $gte: dtStart } }, { tsStart: { $lte: dtEnd } }],
+        })
+        .select({
+          "class": 1,
+          "tsStart": 1,
+          "duration": 1,
+          "status": 1,
+          "statusText": 1,
+          "_id": 0
+        })
+        .sort({ tsStart: 1 })
+        .then((ts: any) => resolve(ts))
+        .catch((err) => reject(err))
+    });
+  }
+
   public deleteOldEntries(hours: number, timeUnit: TIME_UNIT): Promise<number> {
     const timestamp = moment().subtract(hours, timeUnit);
 

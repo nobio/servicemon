@@ -11,7 +11,7 @@
 # schedule:   cycle time to repeat the test
 # =======================================================
 hosts:
-  - enable: true
+  - enable: false
     id: 10
     name: Test timetracker
     protocol: https

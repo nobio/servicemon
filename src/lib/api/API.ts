@@ -10,6 +10,18 @@ import { PersistenceTargetFactory } from "../persistence/PersistenceTargetFactor
 import { DataServiceFactory } from "../service/DataServiceFactory";
 import { Log } from "./Log";
 
+interface Target {
+  target: string;
+  refId: string;
+  hide: boolean;
+  type: string;
+}
+
+interface TimeseriesResponse {
+  target: string,
+  datapoints: number[][]
+}
+
 export class API {
   /**
  *
@@ -243,8 +255,52 @@ export class API {
       }
     ]
    */
-  public grafanaQuery(req: Request, res: Response) {
-    res.json(200).end();
+  public async grafanaQuery(req: Request, res: Response) {
+    const from: string = req.body.range.from;
+    const to: string = req.body.range.to;
+    const targets: Array<Target> = req.body.targets;
+    const resp: TimeseriesResponse[] = [];
+
+    try {
+      // iterate all targets
+      let configId = '';
+
+      for (const target of targets) {
+        //Log.silly(target);
+
+        // resolve configId by name
+        Configuration.getInstance().hostsConfigs.forEach(configElement => {
+          if (target.target === configElement.name) {
+            configId = configElement.id;
+          }
+        });
+
+        if (configId !== '') {
+          let datapoint: number[] = [];
+          const datapoints: number[][] = [];
+          const timeseries = await DataServiceFactory.getInstance().getDatService().getTimeSeriesStartEnd(configId, from, to);
+          //Log.silly(timeseries)
+
+          for (const ts of timeseries) {
+            datapoint = [];
+            datapoint.push(ts.duration);                               // value (y-Achse)
+            datapoint.push(parseInt(moment(ts.tsStart).format('x')));  // timestamp in millisec (x-Achse)
+
+            datapoints.push(datapoint);
+          }
+
+          resp.push({
+            target: target.target,
+            datapoints: datapoints,
+          })
+        }
+      }
+      Log.silly(resp);
+      res.status(200).json(resp);
+
+    } catch (err: any) {
+      res.status(500).send(err.message + err.stack);
+    }
   }
 
   public grafanaAnnotations(req: Request, res: Response) {
