@@ -4,7 +4,7 @@
   "description": "Monitoring of any endpoints, mainly my own site and api",
   "main": "index.ts",
   "scripts": {
-    "clean": "rimraf ./dist && rimraf ./tmp && rimraf ./src/lib/web && rimraf ./*.db*",
+    "clean": "rimraf ./dist && rimraf ./tmp && rimraf ./*.db*",
     "start": "npm run build; node dist/index.js",
     "start:dev": "nodemon",
     "build": "npm run clean && eslint ./src/ && tsc && cp -r ./src/config ./dist",
