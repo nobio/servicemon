@@ -53,11 +53,11 @@ export class Log {
       console.log(`logging to stdout`);
     }
 
-  };
+  }
 
   /**
    * Transporter writes data to file
-   * @param logObject 
+   * @param logObject
    */
   private static logToTransport(logObject: ILogObject) {
     let file = './upstreammon.log';
@@ -68,38 +68,38 @@ export class Log {
       message: String(logObject.argumentsArray[0]),
     };
 
-    appendFile(file, JSON.stringify(msg) + "\n", function () { });
+    appendFile(file, JSON.stringify(msg) + "\n", (err) => { if (err) Log.error(err) });
   }
 
   /* ------------------------------------------------------------------ */
   /* Log-Methods for each log level */
   /* ------------------------------------------------------------------ */
 
-  public static silly(msg: any) {
+  public static silly(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.silly(msg);
   }
-  public static debug(msg: any) {
+  public static debug(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.debug(msg);
   }
-  public static trace(msg: any) {
+  public static trace(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.trace(msg);
   }
-  public static info(msg: any) {
+  public static info(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.info(msg);
   }
-  public static warn(msg: any) {
+  public static warn(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.warn(msg);
   }
-  public static error(msg: any) {
+  public static error(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.error(msg);
   }
-  public static fatal(msg: any) {
+  public static fatal(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.fatal(msg);
   }

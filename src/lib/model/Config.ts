@@ -3,8 +3,6 @@ import { HostConfig } from "./HostConfig";
 import { Util } from "../api/Util";
 import { Log } from "../api/Log";
 
-const yml = require('yml');
-
 export interface PersistenceConfig {
   persistence: string;
   databaseType: string;
@@ -14,7 +12,8 @@ export interface PersistenceConfig {
 }
 
 export class Configuration {
-  public hostsConfigs: Array<HostConfig> = new Array();
+  //public hostsConfigs: Array<HostConfig> = new Array();
+  public hostsConfigs: Array<HostConfig> = [];
   public peristenceConfig: PersistenceConfig;
   private static instance: Configuration;
 

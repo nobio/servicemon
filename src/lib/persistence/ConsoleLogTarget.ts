@@ -22,11 +22,11 @@ export class ConsoleLogTarget implements PersistenceTarget {
     Log.info(out);
     Log.debug('\\=========================================================/');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(true);
     });
   }
-
+  /* eslint @typescript-eslint/no-unused-vars: "off" */
   deleteRecords(hours: number): Promise<number> {
     // nothing to do...
     return new Promise((resolve, reject) => {

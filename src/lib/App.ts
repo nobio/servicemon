@@ -1,18 +1,18 @@
-import cors from "cors";
+import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import morgan from "morgan";
-import { Util } from "./api/Util";
+import morgan from 'morgan';
+import { API } from "./api/API";
+import { Log } from "./api/Log";
 import { EventListener } from "./EventListener";
 import { RollbackHandler } from "./RollbackHandler";
 import { Scheduler } from "./Scheduler";
 import { DataServiceFactory } from "./service/DataServiceFactory";
-import { Log } from "./api/Log";
 
 const app = express();
 
 export class App {
-  private util = new Util();
+  private api = new API();
 
   constructor() {
     app.set('host', process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
@@ -28,11 +28,16 @@ export class App {
     // ------------------ API ------------------------------------------------
     // restful services for entries using Promises
     // -----------------------------------------------------------------------
-    app.get('/', this.util.handleRoot);
-    app.post('/api/httpstatus', this.util.receiveHttpStatus);
-    app.get('/api/hosts', this.util.getWatchedHostsWithLastStatus);
-    app.get('/api/queue/:configId/status', this.util.getLastStatus);
-    app.get('/api/queue/:configId/timeseries/:timeUnit', this.util.getTimeSeries);
+    app.get('/', this.api.handleRoot);
+    app.post('/api/httpstatus', this.api.receiveHttpStatus);
+    app.get('/api/hosts', this.api.getWatchedHostsWithLastStatus);
+    app.get('/api/queue/:configId/status', this.api.getLastStatus);
+    app.get('/api/queue/:configId/timeseries/:timeUnit', this.api.getTimeSeries);
+
+    app.get('/api', this.api.monitor);
+    app.all('/api/search', this.api.grafanaSearch);
+    app.all('/api/query', this.api.grafanaQuery);
+    app.all('/api/annotations', this.api.monitor);
     // ------------------ SERVER ---------------------------------------------
     // start the web service with http
     // -----------------------------------------------------------------------

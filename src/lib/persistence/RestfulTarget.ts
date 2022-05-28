@@ -3,7 +3,8 @@ import { Output } from "../model/Output";
 import { PersistenceTarget } from "./PersistenceTarget";
 import { Util } from "../api/Util";
 import { Log } from "../api/Log";
-const https = require('https');
+import { Agent } from 'https';
+/* eslint @typescript-eslint/no-var-requires: "off" */
 const axios = require('axios');
 
 export interface RestEndpointConfig {
@@ -42,21 +43,21 @@ export class RestfulTarget implements PersistenceTarget {
   }
 
   persist(out: Output): Promise<boolean> {
-    let bOK: boolean = false;
     Log.debug('/===================RESTFUL================================\\');
     Log.info(`"${out.configName}" (${out.configId}) -> ${out.status} (${out.statusText}) ${out.txId}`);
     Log.debug('\\=========================================================/');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.invoke(out)
         .then(b => resolve(b))
-        .catch(b => resolve(false))
+        .catch(() => resolve(false))
     });
   }
 
+  /* eslint @typescript-eslint/no-unused-vars: "off" */
   deleteRecords(hours: number): Promise<number> {
     // nothing to do...
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(0);
     });
   }
@@ -71,7 +72,7 @@ export class RestfulTarget implements PersistenceTarget {
       baseURL: this.config.protocol + '://' + this.config.baseUrl,
       data: out,
       timeout: 2000,
-      httpsAgent: new https.Agent({ rejectUnauthorized: !this.config.ignoreSSL })
+      httpsAgent: new Agent({ rejectUnauthorized: !this.config.ignoreSSL })
     }
 
     try {
@@ -85,6 +86,7 @@ export class RestfulTarget implements PersistenceTarget {
   /**
    * Export a trace (now to console, later to database)
    */
+  /* eslint @typescript-eslint/no-explicit-any: "off" */
   private evaluateResponse(resp: any): boolean {
     Log.info(`${resp.status}, ${resp.errno}`)
     if (resp.status) return resp.status >= 200 && resp.status < 300;

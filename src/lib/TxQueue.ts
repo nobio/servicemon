@@ -1,3 +1,5 @@
+/* eslint no-cond-assign: "off" */
+
 import EventEmitter from 'events';
 import moment from 'moment';
 import { Queue } from 'queue-typescript';

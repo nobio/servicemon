@@ -1,3 +1,4 @@
+import { Log } from "../api/Log";
 import { Configuration, PersistenceConfig } from "../model/Config";
 import { DataService } from "./DataService";
 import { LokijsDBService } from "./LokijsDBService";
@@ -13,6 +14,8 @@ export class DataServiceFactory {
   constructor() {
 
     const target = process.env.DATASERVICE || this.config.databaseType;
+
+    Log.info(`database service: ${target}`);
 
     switch (target) {
       case 'MONGODB':

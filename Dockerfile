@@ -8,7 +8,7 @@ COPY tsconfig.json ./
 COPY src /opt/servicemon/src
 
 RUN npm ci
-RUN npm run build --production
+RUN npm run build:docker --production
 RUN rm -rf ./src
 
 # create database files (lokijs) and fix access rights
@@ -17,4 +17,4 @@ RUN chmod g+rw monitor.db*
 
 EXPOSE 28090 28090
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:docker" ]

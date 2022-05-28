@@ -1,3 +1,4 @@
+import { Log } from "../api/Log";
 import { Configuration, PersistenceConfig } from "../model/Config";
 import { ConsoleLogTarget } from "./ConsoleLogTarget";
 import { DatabaseTarget } from "./DatabaseTarget";
@@ -15,6 +16,8 @@ export class PersistenceTargetFactory {
   constructor() {
 
     const target = process.env.PERSISTENCE || this.config.persistence;
+
+    Log.info(`persistence target: ${target}`);
 
     switch (target) {
       case 'CONSOLE':

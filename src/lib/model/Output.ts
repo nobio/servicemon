@@ -1,19 +1,20 @@
 import moment from "moment";
+import { hostname } from "os";
 
-const localHostName = require("os").hostname();
+const localHostName = hostname();
 
 export class Output {
-  public txId: string = 'na';
-  public configId: string = '';
-  public configName: string = '';
-  public status: number = 0;
-  public statusText: string = '';
-  public uri: string = '';
-  public method: string = '';
+  public txId = 'na';
+  public configId = '';
+  public configName = '';
+  public status = 0;
+  public statusText = '';
+  public uri = '';
+  public method = '';
   public tsStart: string = moment().format('MM-DD-YY[T]HH:mm[Z]SSS');
   public tsEnd: string = moment().format('MM-DD-YY[T]HH:mm[Z]SSS');
-  public tsExpire: number = -1;
-  public duration: number = 0;
+  public tsExpire = -1;
+  public duration = 0;
   public source: string = localHostName;
 
   /**

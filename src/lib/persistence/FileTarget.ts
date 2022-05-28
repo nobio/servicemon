@@ -2,6 +2,7 @@ import { Util } from "../api/Util";
 import { Output } from "../model/Output";
 import { PersistenceTarget } from "./PersistenceTarget";
 import { Log } from "../api/Log";
+/* eslint @typescript-eslint/no-var-requires: "off" */
 const rollingFile = require('rolling-file');
 
 export interface FileEndpointConfig {
@@ -13,7 +14,7 @@ export interface FileEndpointConfig {
 export class FileTarget implements PersistenceTarget {
 
   private static instance: FileTarget;
-  private fileOutput: any;  // no types for RollingFile available...
+  private fileOutput;  // no types for RollingFile available...
 
   private constructor() {
     try {
@@ -57,15 +58,16 @@ export class FileTarget implements PersistenceTarget {
     Log.info(`"${out.configName}" (${out.configId}) -> ${out.status} (${out.statusText}) ${out.txId}`);
     Log.debug('\\=========================================================/');
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.fileOutput.write(JSON.stringify(out));
       resolve(true);
     });
   }
 
+  /* eslint @typescript-eslint/no-unused-vars: "off" */
   deleteRecords(hours: number): Promise<number> {
     // nothing to do...
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(0);
     });
   }

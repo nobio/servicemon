@@ -3,7 +3,9 @@ import { Output } from "../model/Output";
 import { TimeseriesParams, TIME_UNIT } from "../model/Params";
 import { DataService } from "./DataService";
 import { Log } from "../api/Log";
-const loki = require('lokijs');
+import loki from 'lokijs';
+
+/* eslint @typescript-eslint/no-var-requires: "off" */
 const lfsa = require('lokijs/src/loki-fs-structured-adapter');
 
 // Since autosave timer keeps program from exiting, we exit this program by ctrl-c.
@@ -17,8 +19,8 @@ process.on('SIGINT', () => {
 
 export class LokijsDBService implements DataService {
     private static instance: DataService;
-    private db: any;
-    private httpStatusEvents: any;
+    private db;
+    private httpStatusEvents;
 
     private constructor() {
         this.db = new loki('monitor.db', {
@@ -39,7 +41,7 @@ export class LokijsDBService implements DataService {
     }
 
     public async saveHttpStatus(out: Output): Promise<boolean> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.httpStatusEvents.insert({
                 txId: out.txId,
                 configId: out.configId,
@@ -60,8 +62,8 @@ export class LokijsDBService implements DataService {
     }
 
     public async getLastEntry(configId: string): Promise<Output> {
-        return new Promise((resolve, reject) => {
-            const res: any = this.httpStatusEvents.chain().find({ configId: +configId }).simplesort('tsStart', true).limit(1).data();
+        return new Promise((resolve) => {
+            const res = this.httpStatusEvents.chain().find({ configId: +configId }).simplesort('tsStart', true).limit(1).data();
             const out: Output = new Output();
 
             if (res[0]) {
@@ -83,15 +85,50 @@ export class LokijsDBService implements DataService {
         })
     }
     public async getTimeSeries(params: TimeseriesParams): Promise<Array<Output>> {
-        let response: Output[] = new Array<Output>();
+        const response: Output[] = new Array<Output>();
         //Log.info(params);
         const dtEnd = moment(params.tsStart).add(1, TIME_UNIT.DAYS).subtract(1, TIME_UNIT.SECONDS);
         const dtStart = moment(params.tsStart).subtract(params.countTimeUnits, params.timeUnit);
         Log.silly(`von ${dtStart} bis ${dtEnd}`);
 
-        return new Promise((resolve, reject) => {
-            const res: any[] = this.httpStatusEvents.chain().find({
+        return new Promise((resolve) => {
+            const res = this.httpStatusEvents.chain().find({
                 configId: +params.configId,
+                tsStart: { $gt: dtStart },
+                tsEnd: { $lte: dtEnd },
+            }).simplesort('tsStart', true).data();
+
+            res.forEach(itm => {
+                const out = new Output();
+                out.txId = itm['txId'];
+                out.configId = itm['configId'];
+                out.configName = itm['configName'];
+                out.status = itm['status'];
+                out.statusText = itm['statusText'];
+                out.uri = itm['uri'];
+                out.method = itm['method'];
+                out.tsStart = itm['tsStart'];
+                out.tsEnd = itm['tsEnd'];
+                out.duration = itm['duration'];
+                out.source = itm['source'];
+
+                response.push(out);
+            });
+
+            resolve(response);
+        })
+    }
+
+    public getTimeSeriesStartEnd(configId: string, tsStart: string, tsEnd: string): Promise<Array<Output>> {
+        const response: Output[] = new Array<Output>();
+        //Log.info(params);
+        const dtEnd = moment(tsEnd);
+        const dtStart = moment(tsStart);
+        Log.silly(`von ${dtStart} bis ${dtEnd}`);
+
+        return new Promise((resolve) => {
+            const res = this.httpStatusEvents.chain().find({
+                configId,
                 tsStart: { $gt: dtStart },
                 tsEnd: { $lte: dtEnd },
             }).simplesort('tsStart', true).data();
@@ -121,7 +158,7 @@ export class LokijsDBService implements DataService {
         const timestamp = moment().subtract(hours, timeUnit);
         Log.silly(timestamp)
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const res = this.httpStatusEvents.chain().find({ tsStart: { $lte: timestamp } }).remove();
             this.db.saveDatabase(() => {
                 //Log.info(res.collection.data)
