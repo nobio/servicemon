@@ -1,17 +1,18 @@
-#### https://app.swaggerhub.com
 openapi: 3.0.0
 servers:
   - description: localhost (http)
-    url: http://localhost:28090
-  - description: EWU
-    url: https://httpstatus.ewu.oscp.easycredit.intern/
+    url: "https://localhost:28093"
+  - description: Home Server
+    url: "https://nobio.myhome-server.de/servicemon"
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
 info:
   description: HTTP Status Code Monitor
-  version: "1.0.0"
+  version: 1.0.0
   title: HTTP Status Code Monitor
   contact:
     email: gernot.reichel@teambank.de
-
 tags:
   - name: default
     description: Root Document
@@ -21,7 +22,6 @@ tags:
     description: Monitoring Ergebnisse
   - name: status
     description: Status Events
-#######################################################
 paths:
   /:
     get:
@@ -29,12 +29,13 @@ paths:
         - default
       summary: Bechreibung der Services
       responses:
-        "default":
+        "200":
           description: returns parameter as passed in request (Key=Magic-Header)
           content:
             application/json:
               schema:
                 type: array
+                maxItems: 100000
                 items:
                   type: object
                   properties:
@@ -53,22 +54,20 @@ paths:
                     example:
                       type: string
                       description: curl example how to call this service
-                      example: curl -X GET http://<host>:<port>/api/hosts
-  #######################################################
+                      example: "curl -X GET http://<host>:<port>/api/hosts"
   /api/hosts:
     get:
       tags:
         - hosts
       summary: Liefert alle Hosts mit deren Konfiguration
       responses:
-        "default":
+        "200":
           description: Liste über alle konfigurierten Hosts
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/hosts"
-  #######################################################
-  /api/httpstatus:
+  "/api/httpstatus/{id}":
     post:
       tags:
         - status
@@ -82,7 +81,9 @@ paths:
       parameters:
         - name: id
           in: path
-          description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
+          description: >-
+            unique identifier of a specific host configuration; most likely
+            retrieved by .../hosts method
           required: true
           schema:
             type: string
@@ -91,8 +92,7 @@ paths:
           description: Succesful Response
         "500":
           description: Failed Response
-  #######################################################
-  /api/queue/{configId}/status:
+  "/api/queue/{configId}/status":
     get:
       tags:
         - queue
@@ -100,28 +100,35 @@ paths:
       parameters:
         - name: configId
           in: path
-          description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
+          description: >-
+            unique identifier of a specific host configuration; most likely
+            retrieved by .../hosts method
           required: true
           schema:
             type: string
       responses:
-        "default":
+        "200":
           description: Letztes Statusergebnis für den angegebenen Host
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/status"
-  #######################################################
-  /api/queue/{configId}/timeseries/{timeUnit}:
+  "/api/queue/{configId}/timeseries/{timeUnit}":
     get:
       tags:
         - queue
-      summary: |
-        Liefert eine Zeitreihe gemessener Daten. Dazu muss neben dem Host (configId) eine Zeiteinheit (z.B. hours) und die Anzahl der Zeiteinheiten gegeben werden. Es werden also die Datensätze selektiert, die zwischen "jetzt" und n Zeiteinheiten von "jetzt" in der Vergangeneheit liegen.
+      summary: >
+        Liefert eine Zeitreihe gemessener Daten. Dazu muss neben dem Host
+        (configId) eine Zeiteinheit (z.B. hours) und die Anzahl der
+        Zeiteinheiten gegeben werden. Es werden also die Datensätze selektiert,
+        die zwischen "jetzt" und n Zeiteinheiten von "jetzt" in der
+        Vergangeneheit liegen.
       parameters:
         - name: configId
           in: path
-          description: unique identifier of a specific host configuration; most likely retrieved by .../hosts method
+          description: >-
+            unique identifier of a specific host configuration; most likely
+            retrieved by .../hosts method
           required: true
           schema:
             type: string
@@ -146,26 +153,28 @@ paths:
             type: number
         - name: start
           in: query
-          description: start timestamp from which the time series is loaded; if not required, the actual time stamp is taken by default
+          description: >-
+            start timestamp from which the time series is loaded; if not
+            required, the actual time stamp is taken by default
           required: false
           schema:
             type: string
-            example: 2020-11-05T08:25:21.014Z
+            example: "2020-11-05T08:25:21.014Z"
             description: timestamp of end of test
-
       responses:
-        "default":
-          description: Liste der Statusergebnis für den angegebenen Host und Zeitraum (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
+        "200":
+          description: >-
+            Liste der Statusergebnis für den angegebenen Host und Zeitraum
+            (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/statuses"
-
-#######################################################
 components:
   schemas:
     hosts:
       type: array
+      maxItems: 1000
       items:
         $ref: "#/components/schemas/host"
     host:
@@ -182,7 +191,9 @@ components:
         name:
           type: string
           example: true
-          description: Display name of this configuration; should say something about the expected value
+          description: >-
+            Display name of this configuration; should say something about the
+            expected value
         schedule:
           type: number
           example: 60
@@ -206,7 +217,9 @@ components:
         ignoreSSL:
           type: boolean
           example: true
-          description: if protocol = https this switch could be set to ignore self signed cetrificates
+          description: >-
+            if protocol = https this switch could be set to ignore self signed
+            cetrificates
         lastStatus:
           type: number
           example: 200
@@ -217,7 +230,7 @@ components:
           description: readable http-status code of last test
         lastStart:
           type: string
-          example: 2020-11-05T08:25:21.014Z
+          example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         lastDuration:
           type: number
@@ -225,6 +238,7 @@ components:
           description: latency of request in milli seconds
     statuses:
       type: array
+      maxItems: 10
       items:
         $ref: "#/components/schemas/status"
     status:
@@ -241,7 +255,9 @@ components:
         configName:
           type: string
           example: true
-          description: Display name of this configuration; should say something about the expected value
+          description: >-
+            Display name of this configuration; should say something about the
+            expected value
         status:
           type: number
           example: 200
@@ -252,7 +268,7 @@ components:
           description: readable http-status code of last test
         uri:
           type: string
-          example: https://www.zeiss.de
+          example: "https://www.zeiss.de"
           description: URI of requested host
         method:
           type: string
@@ -260,11 +276,11 @@ components:
           description: http-method of last test
         tsStart:
           type: string
-          example: 2020-11-05T08:25:20.731Z
+          example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
-          example: 2020-11-05T08:25:21.014Z
+          example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
           type: number
@@ -284,7 +300,9 @@ components:
         configName:
           type: string
           example: true
-          description: Display name of this configuration; should say something about the expected value
+          description: >-
+            Display name of this configuration; should say something about the
+            expected value
         status:
           type: number
           example: 200
@@ -295,7 +313,7 @@ components:
           description: readable http-status code of last test
         uri:
           type: string
-          example: https://www.zeiss.de
+          example: "https://www.zeiss.de"
           description: URI of requested host
         method:
           type: string
@@ -303,11 +321,11 @@ components:
           description: http-method of last test
         tsStart:
           type: string
-          example: 2020-11-05T08:25:20.731Z
+          example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
-          example: 2020-11-05T08:25:21.014Z
+          example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
           type: number
@@ -317,3 +335,12 @@ components:
           type: string
           example: TBCL01440
           description: host name where this application runs
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

@@ -1,6 +1,8 @@
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
 import http from 'http';
+import https from 'https';
 import morgan from 'morgan';
 import { API } from "./api/API";
 import { Log } from "./api/Log";
@@ -17,6 +19,7 @@ export class App {
   constructor() {
     app.set('host', process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
     app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '28090');
+    app.set('ssl-port', process.env.SSL_PORT || '28093');
 
 
     // ---------------- MIDDLEWARE -------------------------------------------
@@ -45,6 +48,15 @@ export class App {
       Log.info(`Service Monitor started`)
       Log.info(`Server listening on http://${app.get('host')}:${app.get('port')}/`);
     });
+
+    const sslOptions = {
+      key: fs.readFileSync('keys/key.pem'),
+      cert: fs.readFileSync('keys/cert.pem'),
+    };
+    https.createServer(sslOptions, app).listen(app.get('ssl-port'), app.get('host'), () => {
+      Log.info(`ssl server listening on https://${app.get('host')}:${app.get('ssl-port')}`);
+    });
+
 
     // ------------------ QUEUE-RECEIVER & SCHEDULER -------------------------
     // start the queue-receiver and scheduler to regularily start tasks
