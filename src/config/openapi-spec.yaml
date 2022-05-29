@@ -38,6 +38,7 @@ paths:
                 maxItems: 100000
                 items:
                   type: object
+                  additionalProperties: false
                   properties:
                     method:
                       type: string
@@ -45,14 +46,21 @@ paths:
                       example: get
                     url:
                       type: string
+                      maxLength: 128
+                      pattern: >-
+                        (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
                       description: the url without base url
                       example: /api/test
                     description:
                       type: string
+                      maxLength: 128
+                      pattern: '^[\w-.]'
                       description: Some description of this configuration item
                       example: Dies ist eine Beschreibung
                     example:
                       type: string
+                      maxLength: 128
+                      pattern: '^[\w-.]'
                       description: curl example how to call this service
                       example: "curl -X GET http://<host>:<port>/api/hosts"
   /api/hosts:
@@ -87,6 +95,8 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 64
+            pattern: '^[\w-.]'
       responses:
         "200":
           description: Succesful Response
@@ -106,6 +116,8 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 64
+            pattern: '^[\w-.]'
       responses:
         "200":
           description: Letztes Statusergebnis für den angegebenen Host
@@ -132,12 +144,16 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 64
+            pattern: '^[\w-.]'
         - name: timeUnit
           in: path
           description: Zeiteinheit
           required: true
           schema:
             type: string
+            maxLength: 20
+            pattern: '^[\w-.]'
             default: hours
             enum:
               - months
@@ -155,10 +171,11 @@ paths:
           in: query
           description: >-
             start timestamp from which the time series is loaded; if not
-            required, the actual time stamp is taken by default
+            required, the actual time stamp is taken by default (ISO format)
           required: false
           schema:
             type: string
+            format: date
             example: "2020-11-05T08:25:21.014Z"
             description: timestamp of end of test
       responses:
@@ -179,6 +196,7 @@ components:
         $ref: "#/components/schemas/host"
     host:
       type: object
+      additionalProperties: false
       properties:
         enable:
           type: boolean
@@ -186,11 +204,15 @@ components:
           description: switch if this host should be monitored or not
         id:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
         name:
           type: string
-          example: true
+          maxLength: 20
+          pattern: '^[\w-.]'
+          example: Test for host xxx@yyy.edu
           description: >-
             Display name of this configuration; should say something about the
             expected value
@@ -200,18 +222,25 @@ components:
           description: Time in seconds this host will be requested
         protocol:
           type: string
+          maxLength: 5
+          pattern: '^[\w-.]'
           example: https
           description: Protocol of URI to monitor the host
         baseUrl:
           type: string
-          example: true
+          maxLength: 20
+          pattern: '^[\w-.]'
+          example: www.heise.de
           description: Base URL of URI to monitor the host
         url:
           type: string
-          example: true
+          maxLength: 40
+          pattern: '^[\w-.]'
           description: URL of URI to monitor the host
         method:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: true
           description: http-method to request the host
         ignoreSSL:
@@ -226,10 +255,13 @@ components:
           description: http-status code of last test
         lastStatusText:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: OK
           description: readable http-status code of last test
         lastStart:
           type: string
+          format: date
           example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         lastDuration:
@@ -243,17 +275,24 @@ components:
         $ref: "#/components/schemas/status"
     status:
       type: object
+      additionalProperties: false
       properties:
         txId:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: 14e83800-32f8-4714-98aa-d11e94892b29
           description: unique identifier of one request-transaction
         configId:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
         configName:
           type: string
+          maxLength: 20
+          pattern: '^[\w-.]'
           example: true
           description: >-
             Display name of this configuration; should say something about the
@@ -264,22 +303,31 @@ components:
           description: http-status code of last test
         statusText:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: OK
           description: readable http-status code of last test
         uri:
           type: string
+          maxLength: 80
+          pattern: >-
+            (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
         method:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: GET
           description: http-method of last test
         tsStart:
           type: string
+          format: date
           example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
+          format: date
           example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
@@ -288,17 +336,24 @@ components:
           description: latency of request in milli seconds
         source:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: TBCL01440
           description: host name where this application runs
     status-receive:
       type: object
+      additionalProperties: false
       properties:
         configId:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: a8e969f4-fcd1-4f2d-b7ce-6e800bdfc963
           description: Unique ID to identify this host cnfiguration
         configName:
           type: string
+          maxLength: 40
+          pattern: '^[\w-.]'
           example: true
           description: >-
             Display name of this configuration; should say something about the
@@ -309,22 +364,31 @@ components:
           description: http-status code of last test
         statusText:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: OK
           description: readable http-status code of last test
         uri:
           type: string
+          maxLength: 80
+          pattern: >-
+            (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
         method:
           type: string
+          maxLength: 10
+          pattern: '^[\w-.]'
           example: GET
           description: http-method of last test
         tsStart:
           type: string
+          format: date
           example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
+          format: date
           example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
@@ -333,6 +397,8 @@ components:
           description: latency of request in milli seconds
         source:
           type: string
+          maxLength: 20
+          pattern: '^[\w-.]'
           example: TBCL01440
           description: host name where this application runs
   securitySchemes:
