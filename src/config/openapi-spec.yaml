@@ -34,35 +34,25 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                maxItems: 100000
-                items:
-                  type: object
-                  additionalProperties: false
-                  properties:
-                    method:
-                      type: string
-                      description: http method
-                      example: get
-                    url:
-                      type: string
-                      maxLength: 128
-                      pattern: >-
-                        (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
-                      description: the url without base url
-                      example: /api/test
-                    description:
-                      type: string
-                      maxLength: 128
-                      pattern: '^[\w-.]'
-                      description: Some description of this configuration item
-                      example: Dies ist eine Beschreibung
-                    example:
-                      type: string
-                      maxLength: 128
-                      pattern: '^[\w-.]'
-                      description: curl example how to call this service
-                      example: "curl -X GET http://<host>:<port>/api/hosts"
+                $ref: "#/components/schemas/Root"
+  /api:
+    get:
+      tags:
+        - default
+      summary: Healthcheck endpoint
+      description: Performs a healthcheck if this app (no auth required)
+      responses:
+        "200":
+          description: Healthcheck was performed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthcheckResp"
+        "503":
+          description: |
+            Healthcheck could not be performed successfully because this or a
+            dependend service was not available.
+          content: {}
   /api/hosts:
     get:
       tags:
@@ -74,8 +64,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/hosts"
-  "/api/httpstatus/{id}":
+                $ref: "#/components/schemas/Hosts"
+  /api/httpstatus/{id}:
     post:
       tags:
         - status
@@ -89,7 +79,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: >-
+          description: |
             unique identifier of a specific host configuration; most likely
             retrieved by .../hosts method
           required: true
@@ -102,7 +92,7 @@ paths:
           description: Succesful Response
         "500":
           description: Failed Response
-  "/api/queue/{configId}/status":
+  /api/queue/{configId}/status:
     get:
       tags:
         - queue
@@ -110,7 +100,7 @@ paths:
       parameters:
         - name: configId
           in: path
-          description: >-
+          description: |
             unique identifier of a specific host configuration; most likely
             retrieved by .../hosts method
           required: true
@@ -125,7 +115,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/status"
-  "/api/queue/{configId}/timeseries/{timeUnit}":
+  /api/queue/{configId}/timeseries/{timeUnit}:
     get:
       tags:
         - queue
@@ -138,7 +128,7 @@ paths:
       parameters:
         - name: configId
           in: path
-          description: >-
+          description: |
             unique identifier of a specific host configuration; most likely
             retrieved by .../hosts method
           required: true
@@ -169,7 +159,7 @@ paths:
             type: number
         - name: start
           in: query
-          description: >-
+          description: |
             start timestamp from which the time series is loaded; if not
             required, the actual time stamp is taken by default (ISO format)
           required: false
@@ -180,21 +170,92 @@ paths:
             description: timestamp of end of test
       responses:
         "200":
-          description: >-
+          description: |
             Liste der Statusergebnis für den angegebenen Host und Zeitraum
             (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/statuses"
+  /api/search:
+    get:
+      tags:
+        - Grafana
+      summary: Sucht nach Kategorien, die in Grafana selektierbar sind
+      responses:
+        "200":
+          description: Succesful Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Targets"
+        "500":
+          description: Failed Response
+  /api/query:
+    post:
+      tags:
+        - Grafana
+      summary: Fragt Zeitreihen-Daten für Targets ab. Dies sind die gleichen, die per /search abgefragt wurden
+      description: |
+        ACHTUNG - es werden von Grafana noch weitere Daten gesendet, hier sind
+        jedoch nur die für meine Implementierung relevanten Request Parameter dokumentiert.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GrafanaQueryRequest"
+      responses:
+        "200":
+          description: |
+            Liste der Statusergebnis für den angegebenen Host und Zeitraum
+            (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GrafanaQueryResponse"
+        "500":
+          description: Failed Response
 components:
   schemas:
-    hosts:
+    Root:
+      type: array
+      maxItems: 100000
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          method:
+            type: string
+            maxLength: 10
+            description: http method
+            example: get
+          url:
+            type: string
+            maxLength: 128
+            pattern: |
+              (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
+            description: the url without base url
+            example: /api/test
+          description:
+            type: string
+            maxLength: 128
+            pattern: '^[\w-.]'
+            description: Some description of this configuration item
+            example: Dies ist eine Beschreibung
+          example:
+            type: string
+            maxLength: 128
+            pattern: '^[\w-.]'
+            description: curl example how to call this service
+            example: "curl -X GET http://<host>:<port>/api/hosts"
+
+    Hosts:
       type: array
       maxItems: 1000
       items:
-        $ref: "#/components/schemas/host"
-    host:
+        $ref: "#/components/schemas/Host"
+    Host:
       type: object
       additionalProperties: false
       properties:
@@ -213,7 +274,7 @@ components:
           maxLength: 20
           pattern: '^[\w-.]'
           example: Test for host xxx@yyy.edu
-          description: >-
+          description: |
             Display name of this configuration; should say something about the
             expected value
         schedule:
@@ -246,7 +307,7 @@ components:
         ignoreSSL:
           type: boolean
           example: true
-          description: >-
+          description: |
             if protocol = https this switch could be set to ignore self signed
             cetrificates
         lastStatus:
@@ -294,7 +355,7 @@ components:
           maxLength: 20
           pattern: '^[\w-.]'
           example: true
-          description: >-
+          description: |
             Display name of this configuration; should say something about the
             expected value
         status:
@@ -310,7 +371,7 @@ components:
         uri:
           type: string
           maxLength: 80
-          pattern: >-
+          pattern: |
             (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
@@ -355,7 +416,7 @@ components:
           maxLength: 40
           pattern: '^[\w-.]'
           example: true
-          description: >-
+          description: |
             Display name of this configuration; should say something about the
             expected value
         status:
@@ -371,7 +432,7 @@ components:
         uri:
           type: string
           maxLength: 80
-          pattern: >-
+          pattern: |
             (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
@@ -401,6 +462,133 @@ components:
           pattern: '^[\w-.]'
           example: TBCL01440
           description: host name where this application runs
+    HealthcheckResp:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+            - pass
+            - fail
+            - warn
+          description: |
+            Status of healthcheck. “pass”: healthy “fail”: unhealthy “warn”:
+            healthy, with some concerns
+          example: pass
+        version:
+          type: string
+          maxLength: 15
+          description: version of this application
+          pattern: '^(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$'
+          example: 11.2.3
+        time:
+          type: string
+          description: date/time of this health check
+          example: "2000-01-01T10:15:02.151Z"
+          format: date-time
+        details:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                maxLength: 50
+                description: Name of this component
+                example: database
+              componentType:
+                description: Types of component.
+                type: string
+                enum:
+                  - component
+                  - datastore
+                  - system
+              metricUnit:
+                description: Unit of the measured metric value
+                type: string
+                enum:
+                  - ms
+                  - s
+                  - percent
+                  - GiB
+                  - MiB
+              metricValue:
+                description: |
+                  the value of the given metricUnit. Needs to be a common data
+                  type to hold all other data types; currently it consists of
+                  time and byte and percentage
+                type: string
+                maxLength: 20
+                example: km/h
+    Targets:
+      type: array
+      maxItems: 50
+      items:
+        type: string
+        maxLength: 20
+        pattern: '^[\w-.]'
+        example: [Test on heise.de, Test on spiegel.de, Test on zeiss.de]
+        description: Name of a host configuration
+
+    GrafanaQueryRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        range:
+          type: object
+          additionalProperties: false
+          properties:
+            from:
+              type: string
+              format: date
+              description: Timestamp in ISO format to start searching
+              example: "2020-11-05T08:25:21.014Z"
+            to:
+              type: string
+              format: date
+              description: Timestamp in ISO format to end searching
+              example: "2020-11-05T08:25:21.014Z"
+        targets:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 20
+            pattern: '^[\w-.]'
+            example: [Test on heise.de, Test on spiegel.de, Test on zeiss.de]
+            description: Name of a host configuration
+
+    GrafanaQueryResponse:
+      type: array
+      maxItems: 1000
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          target:
+            type: string
+            maxLength: 20
+            pattern: '^[\w-.]'
+            example: Test on heise.de
+            description: Name of a host configuration
+          datapoints:
+            type: array
+            maxItems: 20
+            description: List of data points for this target
+            items:
+              type: array
+              maxItems: 1000
+              description: one datapoint of this timeseries consists of value (y-axis) and timestamp (x-axis)
+              items:
+                type: number
+                maxLength: 2
+                pattern: '^\d*\.?\d+$'
+                example: [54.1, 1653399024000]
+                description: data point
+
   securitySchemes:
     bearerAuth:
       type: http
