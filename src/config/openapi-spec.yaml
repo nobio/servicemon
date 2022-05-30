@@ -29,12 +29,22 @@ paths:
         - default
       summary: Bechreibung der Services
       responses:
-        "200":
+        200:
           description: returns parameter as passed in request (Key=Magic-Header)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Root"
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
   /api:
     get:
       tags:
@@ -42,13 +52,23 @@ paths:
       summary: Healthcheck endpoint
       description: Performs a healthcheck if this app (no auth required)
       responses:
-        "200":
+        200:
           description: Healthcheck was performed successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthcheckResp"
-        "503":
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
+        503:
           description: |
             Healthcheck could not be performed successfully because this or a
             dependend service was not available.
@@ -59,12 +79,22 @@ paths:
         - hosts
       summary: Liefert alle Hosts mit deren Konfiguration
       responses:
-        "200":
+        200:
           description: Liste über alle konfigurierten Hosts
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Hosts"
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
   /api/httpstatus/{id}:
     post:
       tags:
@@ -88,9 +118,21 @@ paths:
             maxLength: 64
             pattern: '^[\w-.]'
       responses:
-        "200":
+        200:
           description: Succesful Response
-        "500":
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
+        415:
+          description: Unsupported Media Type
+        500:
           description: Failed Response
   /api/queue/{configId}/status:
     get:
@@ -109,12 +151,22 @@ paths:
             maxLength: 64
             pattern: '^[\w-.]'
       responses:
-        "200":
+        200:
           description: Letztes Statusergebnis für den angegebenen Host
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/status"
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
   /api/queue/{configId}/timeseries/{timeUnit}:
     get:
       tags:
@@ -166,10 +218,11 @@ paths:
           schema:
             type: string
             format: date
+            maxLength: 25
             example: "2020-11-05T08:25:21.014Z"
             description: timestamp of end of test
       responses:
-        "200":
+        200:
           description: |
             Liste der Statusergebnis für den angegebenen Host und Zeitraum
             (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
@@ -177,13 +230,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/statuses"
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
   /api/search:
     get:
       tags:
         - Grafana
-      summary: Sucht nach Kategorien, die in Grafana selektierbar sind
+      summary: "Sucht nach Kategorien, die in Grafana selektierbar sind"
       responses:
-        "200":
+        200:
           description: Succesful Response
           content:
             application/json:
@@ -195,10 +258,14 @@ paths:
     post:
       tags:
         - Grafana
-      summary: Fragt Zeitreihen-Daten für Targets ab. Dies sind die gleichen, die per /search abgefragt wurden
-      description: |
+      summary: >-
+        Fragt Zeitreihen-Daten für Targets ab. Dies sind die gleichen, die per
+        /search abgefragt wurden
+      description: >
         ACHTUNG - es werden von Grafana noch weitere Daten gesendet, hier sind
-        jedoch nur die für meine Implementierung relevanten Request Parameter dokumentiert.
+
+        jedoch nur die für meine Implementierung relevanten Request Parameter
+        dokumentiert.
       requestBody:
         required: true
         content:
@@ -206,7 +273,7 @@ paths:
             schema:
               $ref: "#/components/schemas/GrafanaQueryRequest"
       responses:
-        "200":
+        200:
           description: |
             Liste der Statusergebnis für den angegebenen Host und Zeitraum
             (implizit bestimmt durh Zeiteinheit und Anzahl Zeiteinheiten)
@@ -214,7 +281,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GrafanaQueryResponse"
-        "500":
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Not Acceptable
+        429:
+          description: Too Many Requests
+        415:
+          description: Unsupported Media Type
+        500:
           description: Failed Response
 components:
   schemas:
@@ -233,7 +312,7 @@ components:
           url:
             type: string
             maxLength: 128
-            pattern: |
+            pattern: >
               (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
             description: the url without base url
             example: /api/test
@@ -249,7 +328,6 @@ components:
             pattern: '^[\w-.]'
             description: curl example how to call this service
             example: "curl -X GET http://<host>:<port>/api/hosts"
-
     Hosts:
       type: array
       maxItems: 1000
@@ -371,7 +449,7 @@ components:
         uri:
           type: string
           maxLength: 80
-          pattern: |
+          pattern: >
             (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
@@ -384,11 +462,13 @@ components:
         tsStart:
           type: string
           format: date
+          maxLength: 25
           example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
           format: date
+          maxLength: 25
           example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
@@ -432,7 +512,7 @@ components:
         uri:
           type: string
           maxLength: 80
-          pattern: |
+          pattern: >
             (https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})
           example: "https://www.zeiss.de"
           description: URI of requested host
@@ -445,11 +525,13 @@ components:
         tsStart:
           type: string
           format: date
+          maxLength: 25
           example: "2020-11-05T08:25:20.731Z"
           description: timestamp of start of test
         tsEnd:
           type: string
           format: date
+          maxLength: 25
           example: "2020-11-05T08:25:21.014Z"
           description: timestamp of end of test
         duration:
@@ -487,6 +569,7 @@ components:
           description: date/time of this health check
           example: "2000-01-01T10:15:02.151Z"
           format: date-time
+          maxLength: 25
         details:
           type: array
           maxItems: 100
@@ -530,9 +613,11 @@ components:
         type: string
         maxLength: 20
         pattern: '^[\w-.]'
-        example: [Test on heise.de, Test on spiegel.de, Test on zeiss.de]
+        example:
+          - Test on heise.de
+          - Test on spiegel.de
+          - Test on zeiss.de
         description: Name of a host configuration
-
     GrafanaQueryRequest:
       type: object
       additionalProperties: false
@@ -544,11 +629,13 @@ components:
             from:
               type: string
               format: date
+              maxLength: 25
               description: Timestamp in ISO format to start searching
               example: "2020-11-05T08:25:21.014Z"
             to:
               type: string
               format: date
+              maxLength: 25
               description: Timestamp in ISO format to end searching
               example: "2020-11-05T08:25:21.014Z"
         targets:
@@ -558,9 +645,11 @@ components:
             type: string
             maxLength: 20
             pattern: '^[\w-.]'
-            example: [Test on heise.de, Test on spiegel.de, Test on zeiss.de]
+            example:
+              - Test on heise.de
+              - Test on spiegel.de
+              - Test on zeiss.de
             description: Name of a host configuration
-
     GrafanaQueryResponse:
       type: array
       maxItems: 1000
@@ -581,14 +670,17 @@ components:
             items:
               type: array
               maxItems: 1000
-              description: one datapoint of this timeseries consists of value (y-axis) and timestamp (x-axis)
+              description: >-
+                one datapoint of this timeseries consists of value (y-axis) and
+                timestamp (x-axis)
               items:
                 type: number
                 maxLength: 2
-                pattern: '^\d*\.?\d+$'
-                example: [54.1, 1653399024000]
+                pattern: ^\d*\.?\d+$
+                example:
+                  - 54.1
+                  - 1653399024000
                 description: data point
-
   securitySchemes:
     bearerAuth:
       type: http
