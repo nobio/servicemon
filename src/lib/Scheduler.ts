@@ -82,7 +82,7 @@ export class Scheduler {
             httpsAgent: new https.Agent({ rejectUnauthorized: !cfg.ignoreSSL }),
             headers: cfg.headers
         }
-Log.error(options)
+
         axios(options)
             .then((res: unknown) => this.trace(true, res, cfg.id, cfg.name, start))
             .catch((res: unknown) => this.trace(false, res, cfg.id, cfg.name, start));
