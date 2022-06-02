@@ -65,6 +65,7 @@ hosts:
     baseUrl: www.heise.de
     url: ""
     ignoreSSL: false
+    timeout: 2000
     schedule: 10
     concurrent: 1
   - enable: true
@@ -75,6 +76,7 @@ hosts:
     baseUrl: www.zeiss.de
     url: "/xyz"
     ignoreSSL: true
+    timeout: 2000
     schedule: 10
     concurrent: 1
   - enable: true
@@ -85,5 +87,6 @@ hosts:
     baseUrl: www.spiegel.de:30043
     url: "/pingX"
     ignoreSSL: true
+    timeout: 2000
     schedule: 5
     concurrent: 1

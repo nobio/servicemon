@@ -19,6 +19,7 @@ hosts:
     baseUrl: nobio.myhome-server.de
     url: /timetracker/
     ignoreSSL: false
+    timeout: 2000
     schedule: 60
     concurrent: 1
   - enable: true
@@ -29,6 +30,7 @@ hosts:
     baseUrl: nobio.myhome-server.de
     url: /api/health
     ignoreSSL: false
+    timeout: 2500
     schedule: 60
     concurrent: 1
   - enable: true
@@ -39,5 +41,6 @@ hosts:
     baseUrl: nobio.myhome-server.de
     url: /nextcloud/
     ignoreSSL: false
+    timeout: 1000
     schedule: 60
     concurrent: 1
