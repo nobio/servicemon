@@ -6,6 +6,7 @@ COPY package*.json ./
 COPY tsconfig.json ./
 # copy source code to /usr/src/app folder
 COPY src /opt/servicemon/src
+COPY keys /opt/servicemon/keys
 
 RUN npm ci
 RUN npm run build:docker --production
