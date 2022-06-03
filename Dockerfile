@@ -17,5 +17,6 @@ RUN touch monitor.db monitor.db.0
 RUN chmod g+rw monitor.db*
 
 EXPOSE 28090 28090
+EXPOSE 28093 28093
 
 CMD [ "npm", "run", "start:docker" ]
