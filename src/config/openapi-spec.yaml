@@ -27,7 +27,7 @@ paths:
     get:
       tags:
         - default
-      summary: Bechreibung der Services
+      summary: Beschreibung der Services
       responses:
         200:
           description: returns parameter as passed in request (Key=Magic-Header)
