@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import moment from "moment-timezone";
-import { Document, Model, Mongoose } from "mongoose";
+import { Model, Mongoose, Schema } from "mongoose";
+import { Log } from "../api/Log";
 import { Util } from "../api/Util";
 import { Output } from "../model/Output";
 import { TimeseriesParams, TIME_UNIT } from "../model/Params";
 import { MongoDBConfig } from "../persistence/DatabaseTarget";
-import { DataService } from "./DataService";
-import { Log } from "../api/Log";
+import { DataService, IHttpStatusEvent } from "./DataService";
 
 process.on('SIGINT', () => {
   Log.silly("flushing database");
@@ -16,7 +16,7 @@ process.on('SIGINT', () => {
 export class MongoDBService implements DataService {
   private static instance: DataService;
   private mongoose = new Mongoose();
-  private HttpStatusEvent: Model<Document>;
+  private HttpStatusEvent: Model<IHttpStatusEvent>;
   private cfg: MongoDBConfig;
 
   private mongoOptions = {
@@ -59,8 +59,8 @@ export class MongoDBService implements DataService {
     }
 
 
-    // setup document
-    const HttpStatusEvent = new this.mongoose.Schema({
+    // setup model
+    const HttpStatusEventSchema: Schema = new Schema({
       txId: { type: String, required: true, index: true },
       configId: { type: String, required: true, index: true },
       configName: { type: String, required: true, index: false },
@@ -75,7 +75,7 @@ export class MongoDBService implements DataService {
       source: { type: String, required: false, index: false },
     });
 
-    this.HttpStatusEvent = this.mongoose.model('HttpStatusEvent', HttpStatusEvent);
+    this.HttpStatusEvent = this.mongoose.model<IHttpStatusEvent>('HttpStatusEvent', HttpStatusEventSchema);
 
   }
 
@@ -92,8 +92,8 @@ export class MongoDBService implements DataService {
   // *********************************************************************************** //
   public async saveHttpStatus(out: Output): Promise<boolean> {
 
-    return new Promise((resolve) => {
-      new this.HttpStatusEvent({
+    try {
+      await new this.HttpStatusEvent({
         txId: out.txId,
         configId: out.configId,
         configName: out.configName,
@@ -106,17 +106,13 @@ export class MongoDBService implements DataService {
         tsExpire: moment(out.tsExpire).toDate(),
         duration: out.duration,
         source: out.source,
-      }).save((err) => {
-        if (err) {
-          Log.error(err);
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      })
+      }).save();
+      return true;
 
-    });
-
+    } catch (error) {
+      Log.error(error);
+      return false;
+    }
   }
 
   public async getLastEntry(configId: string): Promise<Output> {
