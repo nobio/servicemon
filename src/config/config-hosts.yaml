@@ -22,6 +22,7 @@ hosts:
     timeout: 2000
     schedule: 60
     concurrent: 1
+    headers: { "User-Agent": "servicemon 2.2.4" }
   - enable: true
     id: 11
     name: Test timetracker api healthcheck
@@ -33,6 +34,7 @@ hosts:
     timeout: 2500
     schedule: 60
     concurrent: 1
+    headers: { "User-Agent": "servicemon 2.2.4" }
   - enable: true
     id: 20
     name: Test nextcloud
@@ -44,3 +46,4 @@ hosts:
     timeout: 1000
     schedule: 60
     concurrent: 1
+    headers: { "User-Agent": "servicemon 2.2.4" }
