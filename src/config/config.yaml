@@ -6,6 +6,10 @@ rollbackhandling:
   # expire time of a transaction in seconds (3600 = 1h)
   expire: 3600
 
+notification:
+  slack:
+    webhook: <slack-webhook-url>
+
 # ================ Configuration of Persistance Targets (=receiver) ================
 persistenceTarget:
   # ================ define the persistence target ================
