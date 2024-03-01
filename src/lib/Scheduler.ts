@@ -96,7 +96,7 @@ export class Scheduler {
         const output: Output = new Output();
         output.configId = id;
         output.configName = name;
-        Log.silly(resp.data)
+        if (resp.data) Log.silly(resp.data)
 
         if (success) {
             output.status = resp.status;
