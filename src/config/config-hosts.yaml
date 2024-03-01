@@ -23,7 +23,7 @@ hosts:
     schedule: 60
     concurrent: 1
     headers: { "User-Agent": "servicemon 2.3.0" }
-  - enable: false
+  - enable: true
     id: 11
     name: Test timetracker api healthcheck
     protocol: https
@@ -32,9 +32,9 @@ hosts:
     url: /api/health
     ignoreSSL: false
     timeout: 2500
-    schedule: 60
+    schedule: 5
     concurrent: 1
-    headers: { "User-Agent": "servicemon 2.3.0" }
+    headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: false
     id: 20
     name: Franz' Nextcloud
@@ -47,7 +47,7 @@ hosts:
     schedule: 60
     concurrent: 1
     headers: { "User-Agent": "servicemon 2.3.0" }
-  - enable: true
+  - enable: false
     id: 20
     name: "-- Experimental: localhost:8080 --"
     protocol: http
