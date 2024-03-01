@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
+/* eslint @typescript-eslint/no-explicit-any: "off" */
 import moment from 'moment';
 import { Configuration } from './model/Config';
 import { Output } from './model/Output';
