@@ -28,3 +28,24 @@ export class TimeUnitConverter {
     }
   }
 }
+export enum LOGLEVEL {
+  SILLY = 0,
+  TRACE = 1,
+  DEBUG = 2,
+  INFO = 3,
+  WARN = 4,
+  ERROR = 5,
+  FATAL = 6,
+}
+export class LogLevelConverter {
+  public static convertStringToNumLogLevel(val: string): number {
+    let numericLoglevel = 2;
+
+    for (let idx = 0; idx <= 6; idx++) {
+      console.log(idx, val, LOGLEVEL[idx], numericLoglevel)
+      if (LOGLEVEL[idx] === val) numericLoglevel = idx;
+    }
+    console.log('I will return ' + numericLoglevel)
+    return numericLoglevel;
+  }
+}

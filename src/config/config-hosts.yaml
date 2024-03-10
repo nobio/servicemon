@@ -32,12 +32,24 @@ hosts:
     url: /api/health
     ignoreSSL: false
     timeout: 2500
-    schedule: 60
+    schedule: 5
     concurrent: 1
-    headers: { "User-Agent": "servicemon 2.3.0" }
+    headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: true
+    id: 12
+    name: Test timetracker api healthcheck
+    protocol: https
+    method: get
+    baseUrl: qnap-nas:8443
+    url: /timetracker/api/health
+    ignoreSSL: true
+    timeout: 2500
+    schedule: 5
+    concurrent: 1
+    headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
+  - enable: false
     id: 20
-    name: Test nextcloud
+    name: Franz' Nextcloud
     protocol: https
     method: get
     baseUrl: nobio.myhome-server.de
@@ -46,4 +58,16 @@ hosts:
     timeout: 1000
     schedule: 60
     concurrent: 1
+    headers: { "User-Agent": "servicemon 2.3.0" }
+  - enable: false
+    id: 20
+    name: "-- Experimental: localhost:8080 --"
+    protocol: http
+    method: get
+    baseUrl: localhost:8080
+    url: /hello
+    ignoreSSL: false
+    timeout: 1000
+    schedule: 1
+    concurrent: 120
     headers: { "User-Agent": "servicemon 2.3.0" }

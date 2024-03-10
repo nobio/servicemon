@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
+/* eslint @typescript-eslint/no-explicit-any: "off" */
 import moment from 'moment';
 import { Configuration } from './model/Config';
 import { Output } from './model/Output';
@@ -95,7 +96,9 @@ export class Scheduler {
         const output: Output = new Output();
         output.configId = id;
         output.configName = name;
-        Log.silly(resp.data)
+
+        if (resp.headers) Log.silly(resp.headers);
+        if (resp.data) Log.silly(resp.data);
 
         if (success) {
             output.status = resp.status;

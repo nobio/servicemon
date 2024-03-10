@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: "off" */
 import 'dotenv/config';
 import moment from "moment-timezone";
 import { Model, Mongoose, Schema } from "mongoose";
@@ -19,11 +20,6 @@ export class MongoDBService implements DataService {
   private HttpStatusEvent: Model<IHttpStatusEvent>;
   private cfg: MongoDBConfig;
 
-  private mongoOptions = {
-    keepAlive: true,
-    useNewUrlParser: true,
-  }
-
   private constructor() {
     try {
       this.cfg = Util.loadConfig().persistenceTarget.database;
@@ -44,7 +40,7 @@ export class MongoDBService implements DataService {
       Log.silly(mongoConnect);
       console.log(mongoConnect);
 
-      this.mongoose.connect(mongoConnect, this.mongoOptions).then(
+      this.mongoose.connect(mongoConnect).then(
         () => {
           Log.info('mongodb is ready to use.');
         },

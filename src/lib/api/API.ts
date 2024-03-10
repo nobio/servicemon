@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: "off" */
 import { Request, Response } from "express";
 import moment from "moment";
 import { Configuration } from "../model/Config";
