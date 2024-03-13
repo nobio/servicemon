@@ -33,7 +33,7 @@ export class DatabaseTarget implements PersistenceTarget {
 
   persist(out: Output): Promise<boolean> {
     Log.debug('/=================DATABASE============================================================\\');
-    Log.info(`"${out.configName}" (${out.configId}) -> ${out.status} (${out.statusText}) ${out.txId}`);
+    Log.info(`"${out.configName}" - ${out.configId} (${out.duration}) -> ${out.status} (${out.statusText}) ${out.txId}`);
     Log.debug('\\=====================================================================================/');
 
     return DataServiceFactory.getInstance().getDatService().saveHttpStatus(out);

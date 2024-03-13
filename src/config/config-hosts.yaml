@@ -25,7 +25,7 @@ hosts:
     headers: { "User-Agent": "servicemon 2.3.0" }
   - enable: true
     id: 11
-    name: Test timetracker api healthcheck
+    name: Test timetracker api healthcheck (ext)
     protocol: https
     method: get
     baseUrl: nobio.myhome-server.de
@@ -37,7 +37,7 @@ hosts:
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: true
     id: 12
-    name: Test timetracker api healthcheck
+    name: Test timetracker api healthcheck (int)
     protocol: https
     method: get
     baseUrl: qnap-nas:8443
