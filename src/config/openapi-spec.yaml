@@ -1,6 +1,8 @@
 openapi: 3.0.0
 servers:
   - description: localhost (http)
+    url: "http://localhost:28090"
+  - description: localhost (https)
     url: "https://localhost:28093"
   - description: Home Server
     url: "https://nobio.myhome-server.de/servicemon"
@@ -244,7 +246,7 @@ paths:
     get:
       tags:
         - Grafana
-      summary: "Sucht nach Kategorien, die in Grafana selektierbar sind"
+      summary: "Sucht nach aktiven (!) Kategorien, die in Grafana selektierbar sind"
       responses:
         200:
           description: Succesful Response

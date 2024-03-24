@@ -42,7 +42,7 @@ export class LogLevelConverter {
     let numericLoglevel = 2;
 
     for (let idx = 0; idx <= 6; idx++) {
-      console.log(idx, val, LOGLEVEL[idx], numericLoglevel)
+      //console.log(idx, val, LOGLEVEL[idx], numericLoglevel)
       if (LOGLEVEL[idx] === val) numericLoglevel = idx;
     }
     console.log('I will return ' + numericLoglevel)

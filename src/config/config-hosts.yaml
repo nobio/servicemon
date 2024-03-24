@@ -35,7 +35,7 @@ hosts:
     schedule: 5
     concurrent: 1
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
-  - enable: true
+  - enable: false
     id: 12
     name: Test timetracker api healthcheck (int)
     protocol: https
@@ -44,7 +44,7 @@ hosts:
     url: /timetracker/api/health
     ignoreSSL: true
     timeout: 2500
-    schedule: 5
+    schedule: 1
     concurrent: 1
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: false

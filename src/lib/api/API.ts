@@ -185,7 +185,7 @@ export class API {
    * @param res: [host1, host2, host3] (Liste der Hostsnamen. Diese können im Query-Dialog ausgewählt werden)
    */
   public grafanaSearch(req: Request, res: Response) {
-    const resp: string[] = Configuration.getInstance().hostsConfigs.map(cfg => cfg.name);
+    const resp: string[] = Configuration.getInstance().hostsConfigs.filter(cfg => cfg.enable === true).map(cfg => cfg.name);
     res.status(200).json(resp);
   }
 
