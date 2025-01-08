@@ -40,7 +40,7 @@ export class RollbackHandler {
   }
 
   private checkRolledBackEvents(): void {
-    let txId: string;
+    let txId: string | undefined;
     let outAny: Output | undefined;
     const eventList: Array<Output> = new Array<Output>();
 
