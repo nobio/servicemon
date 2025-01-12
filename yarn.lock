@@ -211,6 +211,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/figlet@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.npmjs.org/@types/figlet/-/figlet-1.7.0.tgz"
+  integrity sha512-KwrT7p/8Eo3Op/HBSIwGXOsTZKYiM9NpWRBJ5sVjWP/SmlS+oxxRvJht/FNAtliJvja44N3ul1yATgohnVBV0Q==
+
 "@types/http-errors@*":
   version "2.0.4"
   resolved "https://registry.npmjs.org/@types/http-errors/-/http-errors-2.0.4.tgz"
@@ -1152,6 +1157,11 @@ fastq@^1.6.0:
   integrity sha512-QKHXPW0hD8g4UET03SdOdunzSouc9N4AuHdsX8XNcTsuz+yYFILVNIX4l9yHABMhiEI9Db0JTTIpu0wB+Y1QQw==
   dependencies:
     reusify "^1.0.4"
+
+figlet@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/figlet/-/figlet-1.8.0.tgz"
+  integrity sha512-chzvGjd+Sp7KUvPHZv6EXV5Ir3Q7kYNpCr4aHrRW79qFtTefmQZNny+W1pW9kf5zeE6dikku2W50W/wAH2xWgw==
 
 file-entry-cache@^6.0.1:
   version "6.0.1"
