@@ -7,6 +7,7 @@ export class Util {
   /**
    * Laden einer Configdatei. Dabei wird auch ein Umgebungsvariable berücksichtigt, die den Pfad auf die Datei angibt
    * Please mind: In OSCP the filename (part of configmap) is named "upstreammon-config.yaml" instead of the local "config.yaml"
+   * @returns The loaded configuration object.
    */
   public static loadConfig() {
     let target: string;
@@ -21,6 +22,10 @@ export class Util {
     return yml.load(target, 'utf8');
   }
 
+  /**
+   * Laden einer Host-Configdatei. Dabei wird auch ein Umgebungsvariable berücksichtigt, die den Pfad auf die Datei angibt
+   * @returns The loaded host configuration object.
+   */
   public static loadHostConfig() {
     let target: string;
 

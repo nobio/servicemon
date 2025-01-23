@@ -87,7 +87,7 @@ export class TxQueue extends EventEmitter.EventEmitter {
    * committs all transactions
    */
   public commitAll(): void {
-    let key: string;
+    let key: string | undefined;
     while (key = this.txMap.keys().next().value) {
       this.commit(key);
     }
@@ -114,7 +114,7 @@ export class TxQueue extends EventEmitter.EventEmitter {
   }
 
   public rollbackAll() {
-    let txId: string;
+    let txId: string | undefined;
     while (txId = this.txMap.keys().next().value) {
       this.rollback(txId);
     }
