@@ -25,10 +25,10 @@ interface TimeseriesResponse {
 
 export class API {
   /**
- *
- * @param req
- * @param res
- */
+   * Handles the root endpoint and returns API documentation.
+   * @param req - The request object.
+   * @param res - The response object.
+   */
   public handleRoot(req: Request, res: Response) {
     res.status(200).json([
       {
@@ -65,9 +65,9 @@ export class API {
   }
 
   /**
-   *
-   * @param req
-   * @param res
+   * Receives and stores an HTTP status measurement.
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public receiveHttpStatus(req: Request, res: Response): void {
     const o = new Output();
@@ -88,26 +88,24 @@ export class API {
     const dbTarget = DatabaseTarget.getInstance();
     dbTarget.persist(o)
       .then(result => res.status(200).send(result))
-      .catch(result => res.status(500).send(result))
+      .catch(result => res.status(500).send(result));
   }
 
   /**
-   * load hosts configuration incl. last measurements
-   * @param req
-   * @param res
+   * Loads hosts configuration including last measurements.
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public async getWatchedHostsWithLastStatus(req: Request, res: Response) {
     const hostConfigs: HostConfig[] = Configuration.getInstance().hostsConfigs;
 
-    const hostCfg: HostConfig[] = hostConfigs.map((hsot) => hsot);
+    const hostCfg: HostConfig[] = hostConfigs.map((host) => host);
 
-    // ger actual data from database
+    // get actual data from database
     new Promise((resolve, reject) => {
-
-      // return empty result if no hosts were found
       if (hostCfg.length === 0) resolve([]);
 
-      const hostConfigWithStatuses: HostConfigStatus[] = new Array<HostConfigStatus>();
+      const hostConfigWithStatuses: HostConfigStatus[] = [];
       hostCfg.forEach((host, idx, array) => {
         DataServiceFactory.getInstance().getDatService().getLastEntry(host.id)
           .then((output: Output) => {
@@ -121,15 +119,18 @@ export class API {
           })
           .catch(err => reject(err));
       });
-
     }).then(h => res.status(200).json(h))
-
+      .catch(err => res.status(500).send(err));
   }
 
   /**
+   * Returns metadata of configured hosts.
    * curl -X GET http://localhost:28090/api/hosts
    * @param req
    * @param res
+
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public async getWatchedHosts(req: Request, res: Response) {
     const hostConfigs = Configuration.getInstance().hostsConfigs;
@@ -137,40 +138,58 @@ export class API {
   }
 
   /**
+   * Returns the last stored status for the given configuration.
    * curl -X GET http://localhost:28090/api/queue/xxxxxxxx-4533-43d7-aa52-1d4c0a066ea2/status
    * @param req
    * @param res
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public getLastStatus(req: Request, res: Response) {
-    if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) { res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' }); return; }
+    if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) {
+      res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' });
+      return;
+    }
 
-    DataServiceFactory.getInstance().getDatService().getLastEntry(req.params['configId'])
+    DataServiceFactory.getInstance().getDatService().getLastEntry(req.params.configId)
       .then((ts: Output) => res.status(200).json(ts))
       .catch((err: Error) => res.status(500).send(err.message + err.stack));
   }
 
   /**
+   * Returns time series for a given configuration, start time, and time unit.
    * curl -X GET "http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/month?start=2020-10-11&count=1"
-   * curl -X GET http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/month?count=1
-   * @param req
-   * @param res
+   * curl -X GET "http://localhost:28090/api/queue/8d46657c-4f94-4d37-9db5-cb8fcd79a423/timeseries/month?count=1"
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public getTimeSeries(req: Request, res: Response) {
-    if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) { res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' }); return; }
-    if (!req.params['timeUnit']) { res.status(500).json({ 'error': 'please provide timeUnit' }); return; }
-    if (!req.params['configId']) { res.status(500).json({ 'error': 'please provide configId' }); return; }
-    if (!req.query['count']) { res.status(500).json({ 'error': 'please provide count' }); return; }
-    //    if (!req.query['start']) { res.status(500).json({ 'error': 'please provide start' }); return; }
-    if (!req.query['start']) {
+    if (!(PersistenceTargetFactory.getInstance().getPersistenceTarget() instanceof DatabaseTarget)) {
+      res.status(500).json({ 'error': 'last status can only be read for persistence target = DATABASE; please check your config' });
+      return;
+    }
+    if (!req.params.timeUnit) {
+      res.status(500).json({ 'error': 'please provide timeUnit' });
+      return;
+    }
+    if (!req.params.configId) {
+      res.status(500).json({ 'error': 'please provide configId' });
+      return;
+    }
+    if (!req.query.count) {
+      res.status(500).json({ 'error': 'please provide count' });
+      return;
+    }
+    if (!req.query.start) {
       req.query.start = moment().toISOString();
     }
 
     const params: TimeseriesParams = {
-      timeUnit: TimeUnitConverter.convertString2TimeUnit(req.params['timeUnit']),
-      configId: req.params['configId'],
-      tsStart: `${req.query['start']}`,
-      countTimeUnits: Number(req.query['count']),
-    }
+      timeUnit: TimeUnitConverter.convertString2TimeUnit(req.params.timeUnit),
+      configId: req.params.configId,
+      tsStart: `${req.query.start}`,
+      countTimeUnits: Number(req.query.count),
+    };
 
     DataServiceFactory.getInstance().getDatService().getTimeSeries(params)
       .then((ts: any) => res.status(200).json(ts))
@@ -178,14 +197,17 @@ export class API {
   }
 
   /**
+   * Implements Grafana "search" endpoint.
    * implements Grafana "search" endpoint; see https://grafana.com/grafana/plugins/grafana-simple-json-datasource/
    * curl -X POST http://localhost:28090/api/search
    *
    * @param req: /search => { target: '' }
    * @param res: [host1, host2, host3] (Liste der Hostsnamen. Diese können im Query-Dialog ausgewählt werden)
+   * @param req - The request object.
+   * @param res - The response object.
    */
   public grafanaSearch(req: Request, res: Response) {
-    const resp: string[] = Configuration.getInstance().hostsConfigs.map(cfg => cfg.name);
+    const resp: string[] = Configuration.getInstance().hostsConfigs.filter(cfg => cfg.enable).map(cfg => cfg.name);
     res.status(200).json(resp);
   }
 
@@ -259,11 +281,10 @@ export class API {
   public async grafanaQuery(req: Request, res: Response) {
     const from: string = req.body.range.from;
     const to: string = req.body.range.to;
-    const targets: Array<Target> = req.body.targets;
+    const targets: Target[] = req.body.targets;
     const resp: TimeseriesResponse[] = [];
 
     try {
-      // iterate all targets
       let configId = '';
 
       for (const target of targets) {
@@ -277,23 +298,19 @@ export class API {
         });
 
         if (configId !== '') {
-          let datapoint: number[] = [];
           const datapoints: number[][] = [];
           const timeseries = await DataServiceFactory.getInstance().getDatService().getTimeSeriesStartEnd(configId, from, to);
           //Log.silly(timeseries)
 
           for (const ts of timeseries) {
-            datapoint = [];
-            datapoint.push(ts.duration);                               // value (y-Achse)
-            datapoint.push(parseInt(moment(ts.tsStart).format('x')));  // timestamp in millisec (x-Achse)
-
+            const datapoint = [ts.duration, parseInt(moment(ts.tsStart).format('x'))];
             datapoints.push(datapoint);
           }
 
           resp.push({
             target: target.target,
             datapoints: datapoints,
-          })
+          });
         }
       }
       Log.silly(resp);
@@ -304,31 +321,29 @@ export class API {
     }
   }
 
+  /**
+   * Handles Grafana annotations requests.
+   * @param req - The request object.
+   * @param res - The response object.
+   */
   public grafanaAnnotations(req: Request, res: Response) {
-    res.json(200).end();
+    res.status(200).end();
   }
 
+  /**
+   * Monitors incoming requests and logs the details.
+   * @param req - The request object.
+   * @param res - The response object.
+   */
   public monitor(req: Request, res: Response): void {
-    console.log(req.url)
-    console.log(req.method)
     const resp = {
       url: req.url,
       method: req.method,
-      headers: {},
-      body: {}
+      headers: req.headers,
+      body: req.body
     };
 
-    resp.url = req.url;
-    resp.method = req.method;
-    //  resp.headers = JSON.stringify(req.headers);
-    //  resp.body = JSON.stringify(req.body);
-    if (Object.keys(req.headers).length) resp.headers = req.headers;
-    if (Object.keys(req.body).length) resp.body = req.body;
-
     Log.info(JSON.stringify(resp));
-
     res.status(200).json(resp);
-
   }
-
 }

@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
+import figlet from 'figlet';
 import http from 'http';
 import https from 'https';
 import morgan from 'morgan';
@@ -41,9 +42,12 @@ export class App {
     app.all('/api/search', this.api.grafanaSearch);
     app.all('/api/query', this.api.grafanaQuery);
     //app.all('/api/annotations', this.api.monitor);
+
     // ------------------ SERVER ---------------------------------------------
     // start the web service with http
     // -----------------------------------------------------------------------
+    console.log(figlet.textSync('-- servicemon --'));
+
     http.createServer(app).listen(app.get('port'), app.get('host'), () => {
       Log.info(`Service Monitor started`)
       Log.info(`Server listening on http://${app.get('host')}:${app.get('port')}/`);

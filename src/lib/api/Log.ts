@@ -6,23 +6,22 @@ export class Log {
   private static logger: Logger<ILogObj>;
 
   /**
-   * initialze my Logger instance and configure it properly
+   * Initializes the Logger instance and configures it properly.
    */
   private static init() {
-    const minLogLevel = (process.env.LOGLEVEL ? LogLevelConverter.convertStringToNumLogLevel(process.env.LOGLEVEL) : LOGLEVEL.DEBUG);
+    const minLogLevel = process.env.LOGLEVEL ? LogLevelConverter.convertStringToNumLogLevel(process.env.LOGLEVEL) : LOGLEVEL.DEBUG;
 
-    // ------------------- configure logger -------------------
-    this.logger = new Logger();
-    this.logger.settings.minLevel = minLogLevel;
-    this.logger.settings.prettyLogTimeZone = 'local';
-    this.logger.settings.type = 'pretty';
-    this.logger.settings.hideLogPositionForProduction = true;
-    // --------------------------------------------------------
+    this.logger = new Logger({
+      minLevel: minLogLevel,
+      prettyLogTimeZone: 'local',
+      type: 'pretty',
+      hideLogPositionForProduction: true
+    });
   }
 
   /**
-   * Transporter writes data to file
-   * @param logObject
+   * Writes log data to a file.
+   * @param logObject - The log object to be written.
    */
   private static logToTransport(logObject: ILogObj) {
     let file = './upstreammon.log';
@@ -30,7 +29,7 @@ export class Log {
 
     const msg = {
       loglevel: logObject.logLevel,
-      message: String(logObject),
+      message: JSON.stringify(logObject),
     };
 
     appendFile(file, JSON.stringify(msg) + "\n", (err) => { if (err) Log.error(err) });
@@ -40,33 +39,66 @@ export class Log {
   /* Log-Methods for each log level */
   /* ------------------------------------------------------------------ */
 
+  /**
+   * Logs a message at the 'silly' level.
+   * @param msg - The message to log.
+   */
   public static silly(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.silly(msg);
   }
+
+  /**
+   * Logs a message at the 'debug' level.
+   * @param msg - The message to log.
+   */
   public static debug(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.debug(msg);
   }
+
+  /**
+   * Logs a message at the 'trace' level.
+   * @param msg - The message to log.
+   */
   public static trace(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.trace(msg);
   }
+
+  /**
+   * Logs a message at the 'info' level.
+   * @param msg - The message to log.
+   */
   public static info(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.info(msg);
   }
+
+  /**
+   * Logs a message at the 'warn' level.
+   * @param msg - The message to log.
+   */
   public static warn(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.warn(msg);
   }
+
+  /**
+   * Logs a message at the 'error' level.
+   * @param msg - The message to log.
+   */
   public static error(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.error(msg);
   }
+
+  /**
+   * Logs a message at the 'fatal' level.
+   * @param msg - The message to log.
+   */
   public static fatal(msg: unknown) {
     if (!this.logger) this.init();
     this.logger.fatal(msg);
   }
-
 }
