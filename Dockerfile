@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:lts-alpine3.22 AS base-image
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
