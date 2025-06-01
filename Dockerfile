@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:24
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
