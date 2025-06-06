@@ -49,7 +49,7 @@
     "rolling-file": "^1.1.0",
     "sqlite3": "^5.1.7",
     "tslog": "^4.9.3",
-    "uuid": "^9.0.1",
+    "uuid": "^11.1.0",
     "yml": "^1.0.0"
   },
   "author": "gernot.reichel@me.com",
