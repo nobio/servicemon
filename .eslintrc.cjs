@@ -9,5 +9,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   rules: {
+    '@typescript-eslint/no-require-imports': 'warn'  // Set to 'off' to disable completely
   }
 };

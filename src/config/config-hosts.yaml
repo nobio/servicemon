@@ -31,9 +31,9 @@ hosts:
     baseUrl: nobio.myhome-server.de
     url: /api/health
     ignoreSSL: false
-    timeout: 2500
+    timeout: 0
     schedule: 5
-    concurrent: 1
+    concurrent: 25
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: false
     id: 12
