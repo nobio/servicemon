@@ -8,9 +8,8 @@ import { TxQueue } from './TxQueue';
 import { HostConfig } from './model/HostConfig';
 import { HttpStatusCodes } from './model/HttpStatusCodes';
 import { Log } from './api/Log';
-
-const https = require('https');
-const axios = require('axios');
+import { default as axios } from 'axios';
+import { default as https } from 'https'
 
 /**
  * start scheduler to run tasks
@@ -81,7 +80,7 @@ export class Scheduler {
             baseURL: cfg.protocol + '://' + cfg.baseUrl,
             timeout: cfg.timeout,
             httpsAgent: new https.Agent({ rejectUnauthorized: !cfg.ignoreSSL }),
-            headers: cfg.headers
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
         }
 
         axios(options)

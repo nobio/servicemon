@@ -5,7 +5,7 @@ import { Util } from "../api/Util";
 import { Log } from "../api/Log";
 import { Agent } from 'https';
 /* eslint @typescript-eslint/no-var-requires: "off" */
-const axios = require('axios');
+import { default as axios } from 'axios';
 
 export interface RestEndpointConfig {
   protocol: string;

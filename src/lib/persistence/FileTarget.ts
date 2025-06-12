@@ -2,6 +2,8 @@ import { Util } from "../api/Util";
 import { Output } from "../model/Output";
 import { PersistenceTarget } from "./PersistenceTarget";
 import { Log } from "../api/Log";
+import { default as fs } from 'fs';
+
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const rollingFile = require('rolling-file');
 
@@ -19,7 +21,6 @@ export class FileTarget implements PersistenceTarget {
   private constructor() {
     try {
       const cfg: FileEndpointConfig = Util.loadConfig().fileendpoint;
-      const fs = require('fs');
       if (!fs.existsSync(cfg.filedir)) {
         fs.mkdirSync(cfg.filedir);
       }

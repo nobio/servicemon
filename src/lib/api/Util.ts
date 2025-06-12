@@ -1,6 +1,10 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-const yml = require('yml');
+//const yml = require('yml');
+import { default as yml } from 'yaml';
 import { Log } from "./Log";
+import { default as fs } from 'fs';
+
+
 
 export class Util {
 
@@ -19,7 +23,8 @@ export class Util {
     }
 
     Log.debug(`loading config ${target}`);
-    return yml.load(target, 'utf8');
+    const file = fs.readFileSync(target, 'utf8')
+    return yml.parse(file);
   }
 
   /**
@@ -36,8 +41,7 @@ export class Util {
     }
 
     Log.debug(`loading config ${target}`);
-    const config = yml.load(target, 'utf8');
-
-    return config
+    const file = fs.readFileSync(target, 'utf8')
+    return yml.parse(file);
   }
 }
