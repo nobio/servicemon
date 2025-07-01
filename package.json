@@ -17,7 +17,7 @@
     "url": "git+https://github.com/nobio/timetracker-mon.git"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.18",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
     "@types/figlet": "^1.7.0",
     "@types/lokijs": "^1.5.14",
