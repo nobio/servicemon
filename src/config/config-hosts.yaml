@@ -33,7 +33,7 @@ hosts:
     ignoreSSL: false
     timeout: 0
     schedule: 5
-    concurrent: 25
+    concurrent: 20
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: false
     id: 12

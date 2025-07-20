@@ -38,8 +38,9 @@ export class Scheduler {
                 // ... initialize this thread with numbers of concurrent instances
                 for (let n = 0; n < cfg.concurrent; n++) {
                     setInterval(() => {
+                        // Log.error(cfg.schedule * 1000 + this.variance(cfg.schedule * 10000));
                         this.invoke(cfg);
-                    }, (cfg.schedule * 1000 + this.variance(cfg.schedule * 1000)));
+                    }, (cfg.schedule * 1000 + this.variance(cfg.schedule * 10000)));
                 }
             }
         });
