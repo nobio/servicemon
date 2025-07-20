@@ -55,6 +55,9 @@ persistenceTarget:
 # url:        part of uri; like the context
 # ignoreSSL:  ignore self signed certificates
 # schedule:   cycle time to repeat the test
+# timeout:    timeout in milliseconds for the request
+# concurrent: number of concurrent requests to the host
+# headers:    additional headers to send with the request
 # =======================================================
 hosts:
   - enable: true
