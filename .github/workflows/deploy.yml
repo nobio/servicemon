@@ -19,17 +19,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create SSH key
-        run: |
-          mkdir -p .ssh/
-          echo "$HETZNER_SSH_PRIVATE_KEY" > ./ssh/private.key
-          echo "XXXX" > ./ssh/private.key
-          sudo chmod 600 ./ssh/private.key
-          echo "$HETZNER_SSH_KNOWN_HOSTS" > .ssh/known_hosts
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{secrets.HETZNER_SSH_PRIVATE_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.HETZNER_SSH_KNOWN_HOSTS}}
           SSH_KEY_PATH: .ssh/private.key
+        run: |
+          mkdir -p .ssh/
+          echo "$SSH_PRIVATE_KEY" > ./ssh/private.key
+          sudo chmod 600 ./ssh/private.key
+          echo "$SSH_KNOWN_HOSTS" > .ssh/known_hosts
 
       - name: Deploy to Server
         env:
