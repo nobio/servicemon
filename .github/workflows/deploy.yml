@@ -23,7 +23,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$HETZNER_SSH_PRIVATE_KEY" > ../private.key
           sudo chmod 600 ../private.key
-          echo "$HETZNER_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          echo "$HETZNER_SSH_KNOWN_HOSTS" > ${{github.workspace}}/.ssh/known_hosts
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{secrets.HETZNER_SSH_PRIVATE_KEY}}
