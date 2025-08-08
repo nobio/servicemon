@@ -26,11 +26,11 @@ jobs:
           SSH_KNOWN_HOSTS: 88.198.110.159
           SSH_KEY_PATH: .ssh/private.key
         run: |
-          mkdir -p .ssh
+          mkdir -p .ssh/
           chmod 700 .ssh
-          touch ./ssh/private.key
-          echo "$SSH_PRIVATE_KEY" > ./ssh/private.key
-          #sudo chmod 600 ./ssh/private.key
+          #touch .ssh/private.key
+          echo "$SSH_PRIVATE_KEY" > .ssh/private.key
+          #sudo chmod 600 .ssh/private.key
           #echo "$SSH_KNOWN_HOSTS" > .ssh/known_hosts
 
       - name: Deploy to Server
