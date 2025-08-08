@@ -22,6 +22,7 @@ jobs:
         run: |
           mkdir -p .ssh/
           echo "$HETZNER_SSH_PRIVATE_KEY" > ./ssh/private.key
+          echo "XXXX" > ./ssh/private.key
           sudo chmod 600 ./ssh/private.key
           echo "$HETZNER_SSH_KNOWN_HOSTS" > .ssh/known_hosts
         shell: bash
