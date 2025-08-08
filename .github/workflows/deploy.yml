@@ -29,3 +29,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{secrets.HETZNER_SSH_PRIVATE_KEY}}
           SSH_KNOWN_HOSTS: ${{secrets.HETZNER_SSH_KNOWN_HOSTS}}
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+
+      - name: Deploy to Server
+        env:
+          SERVER_USER: nobio
+          SERVER: csrvhz01
+          APP_DIR: /home/nobio/container/tmp
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "
+          cd $APP_DIR &&
+          ls -la 
+          "
