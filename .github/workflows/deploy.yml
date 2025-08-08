@@ -18,18 +18,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Add SSH private key to agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}  # Ensure this secret contains the new private key
-
-      - name: Deploy to Server
-        env:
-          SERVER_USER: ${{ secrets.HETZNER_USER }}
-          SERVER: ${{ secrets.HETZNER_SERVER }}
-          APP_DIR: ./container/timetracker
+      - name: Create SSH key
         run: |
-          ssh $SERVER_USER@$SERVER "
-          cd $APP_DIR &&
-          ls -la
-          "
+          mkdir -p ~/.ssh/
+          echo "$HETZNER_SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$HETZNER_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.HETZNER_SSH_PRIVATE_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.HETZNER_SSH_KNOWN_HOSTS}}
+          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
