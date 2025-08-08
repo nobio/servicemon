@@ -32,11 +32,12 @@ jobs:
 
       - name: Deploy to Server
         env:
+          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
           SERVER_USER: nobio
           SERVER: csrvhz01
           APP_DIR: /home/nobio/container/tmp
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "
+          ssh -o StrictHostKeyChecking=no -i $SSH_KEY_PATH $SERVER_USER@$SERVER_IP "
           cd $APP_DIR &&
           ls -la 
           "
