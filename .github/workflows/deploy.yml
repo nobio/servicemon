@@ -33,7 +33,7 @@ jobs:
       - name: Deploy to Server
         env:
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
-          SERVER_USER: nobio
+          SERVER_USER: root
           SERVER_IP: 88.198.110.159
           APP_DIR: /home/nobio/container/tmp
         run: |
