@@ -34,7 +34,7 @@ jobs:
         env:
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
           SERVER_USER: nobio
-          SERVER: 88.198.110.159
+          SERVER_IP: 88.198.110.159
           APP_DIR: /home/nobio/container/tmp
         run: |
           ssh -o StrictHostKeyChecking=no -i $SSH_KEY_PATH $SERVER_USER@$SERVER_IP "
