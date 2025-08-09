@@ -31,6 +31,7 @@ jobs:
           #touch .ssh/private.key
           echo "$SSH_PRIVATE_KEY" > .ssh/private.key
           sudo chmod 600 .ssh/private.key
+          ls -la .ssh/
           echo "$SSH_KNOWN_HOSTS" > .ssh/known_hosts
 
       - name: Deploy to Server
