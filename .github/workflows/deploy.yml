@@ -33,13 +33,11 @@ jobs:
           sudo chmod 600 .ssh/private.key
           echo "$SSH_KNOWN_HOSTS" > .ssh/known_hosts
           ls -la .ssh/
-          cat .ssh/known_hosts
-          cat .ssh/private.key
 
       - name: Deploy to Server
         env:
           SSH_KEY_PATH: .ssh/private.key
-          SERVER_USER: root
+          SERVER_USER: nobio
           SERVER_IP: 88.198.110.159
           APP_DIR: /home/nobio/container/tmp
         run: |
