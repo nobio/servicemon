@@ -59,15 +59,15 @@ hosts:
     schedule: 60
     concurrent: 1
     headers: { "User-Agent": "servicemon 2.3.0" }
-  - enable: false
+  - enable: true
     id: 20
-    name: "-- Experimental: localhost:8080 --"
+    name: "-- Experimental: localhost:30000/api/health --"
     protocol: http
     method: get
-    baseUrl: localhost:8080
-    url: /hello
+    baseUrl: localhost:30000
+    url: /api/health
     ignoreSSL: false
     timeout: 1000
-    schedule: 1
-    concurrent: 120
+    schedule: 10
+    concurrent: 20
     headers: { "User-Agent": "servicemon 2.3.0" }
