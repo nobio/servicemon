@@ -288,7 +288,7 @@ export class API {
       let configId = '';
 
       for (const target of targets) {
-        //Log.silly(target);
+        //Log.silly("Configuration Target: " + target);
 
         // resolve configId by name
         Configuration.getInstance().hostsConfigs.forEach(configElement => {
