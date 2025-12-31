@@ -1,6 +1,7 @@
 import { Output } from "../model/Output";
 import { PersistenceTarget } from "./PersistenceTarget";
 import { Log } from "../api/Log";
+import { LOGLEVEL } from "../model/Params";
 
 export class ConsoleLogTarget implements PersistenceTarget {
   private static instance: ConsoleLogTarget;
@@ -19,7 +20,7 @@ export class ConsoleLogTarget implements PersistenceTarget {
 
   persist(out: Output): Promise<boolean> {
     Log.debug('/=================CONSOLE=================================\\');
-    Log.info(out);
+    Log.generic(out.status < 300 ? LOGLEVEL.INFO : out.status < 400 ? LOGLEVEL.WARN : LOGLEVEL.ERROR, `${out.configName} - ${out.configId} (${out.duration}) -> ${out.status} (${out.statusText}) ${out.txId}`);
     Log.debug('\\=========================================================/');
 
     return new Promise((resolve) => {

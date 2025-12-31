@@ -45,7 +45,6 @@ export class LogLevelConverter {
       //console.log(idx, val, LOGLEVEL[idx], numericLoglevel)
       if (LOGLEVEL[idx] === val) numericLoglevel = idx;
     }
-    console.log('I will return ' + numericLoglevel)
     return numericLoglevel;
   }
 }

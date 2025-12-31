@@ -15,7 +15,7 @@ persistenceTarget:
   # ================ define the persistence target ================
   # values: DATABASE, CONSOLE, RESTFUL, FILE
   persistence: DATABASE
-
+  
   # databaseType only makes sense if persistence = DATABASE
   # values: LOKIJS (local), MONGODB
   databaseType: LOKIJS

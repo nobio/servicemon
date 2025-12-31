@@ -3,6 +3,7 @@ import { Output } from "../model/Output";
 import { DataServiceFactory } from "../service/DataServiceFactory";
 import { PersistenceTarget } from "./PersistenceTarget";
 import { Log } from "../api/Log";
+import { LOGLEVEL } from "../model/Params";
 
 export interface MongoDBConfig {
   protocol: string | undefined;
@@ -33,7 +34,7 @@ export class DatabaseTarget implements PersistenceTarget {
 
   persist(out: Output): Promise<boolean> {
     Log.debug('/=================DATABASE============================================================\\');
-    Log.info(`"${out.configName}" - ${out.configId} (${out.duration}) -> ${out.status} (${out.statusText}) ${out.txId}`);
+    Log.generic(out.status < 300 ? LOGLEVEL.INFO : out.status < 400 ? LOGLEVEL.WARN : LOGLEVEL.ERROR, `${out.configName} - ${out.configId} (${out.duration}) -> ${out.status} (${out.statusText}) ${out.txId}`);
     Log.debug('\\=====================================================================================/');
 
     return DataServiceFactory.getInstance().getDatService().saveHttpStatus(out);

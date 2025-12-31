@@ -101,4 +101,35 @@ export class Log {
     if (!this.logger) this.init();
     this.logger.fatal(msg);
   }
+
+  /**
+   * Logs a message at the 'fatal' level.
+   * @param msg - The message to log.
+   */
+  public static generic(loglevel:LOGLEVEL, msg: unknown) {
+    if (!this.logger) this.init();
+    switch (loglevel) {
+      case LOGLEVEL.SILLY:
+        this.logger.silly(msg);
+        break;
+      case LOGLEVEL.DEBUG:
+        this.logger.debug(msg);
+        break;
+      case LOGLEVEL.TRACE:
+        this.logger.trace(msg);
+        break;
+      case LOGLEVEL.INFO:
+        this.logger.info(msg);
+        break;
+      case LOGLEVEL.WARN:
+        this.logger.warn(msg);
+        break;
+      case LOGLEVEL.ERROR:
+        this.logger.error(msg);
+        break;
+      case LOGLEVEL.FATAL:   
+        this.logger.fatal(msg);
+        break;
+    }
+  }
 }

@@ -1,8 +1,9 @@
-import { Util } from "../api/Util";
+import { default as fs } from 'fs';
+import { Log } from "../api/Log";
+import { Configuration, PersistenceConfig } from "../model/Config";
 import { Output } from "../model/Output";
 import { PersistenceTarget } from "./PersistenceTarget";
-import { Log } from "../api/Log";
-import { default as fs } from 'fs';
+import { LOGLEVEL } from '../model/Params';
 
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const rollingFile = require('rolling-file');
@@ -16,14 +17,17 @@ export interface FileEndpointConfig {
 export class FileTarget implements PersistenceTarget {
 
   private static instance: FileTarget;
+  private persistCfg: PersistenceConfig;
   private fileOutput;  // no types for RollingFile available...
 
   private constructor() {
     try {
-      const cfg: FileEndpointConfig = Util.loadConfig().fileendpoint;
+      this.persistCfg = Configuration.getInstance().peristenceConfig
+      const cfg: FileEndpointConfig = this.persistCfg.fileendpoint;
       if (!fs.existsSync(cfg.filedir)) {
         fs.mkdirSync(cfg.filedir);
       }
+      console.log('File persistence config', cfg.filedir);
 
       Log.silly(`init FileTarget ${cfg.filedir}/${cfg.filename}`);
       Log.silly(process.cwd());
@@ -56,7 +60,7 @@ export class FileTarget implements PersistenceTarget {
 
   persist(out: Output): Promise<boolean> {
     Log.debug('/====================FILE==================================\\');
-    Log.info(`"${out.configName}" (${out.configId}) -> ${out.status} (${out.statusText}) ${out.txId}`);
+    Log.generic(out.status < 300 ? LOGLEVEL.INFO : out.status < 400 ? LOGLEVEL.WARN : LOGLEVEL.ERROR, `${out.configName} - ${out.configId} (${out.duration}) -> ${out.status} (${out.statusText}) ${out.txId}`);    
     Log.debug('\\=========================================================/');
 
     return new Promise((resolve) => {

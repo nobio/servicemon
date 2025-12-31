@@ -10,6 +10,7 @@ import { HttpStatusCodes } from './model/HttpStatusCodes';
 import { Log } from './api/Log';
 import { default as axios } from 'axios';
 import { default as https } from 'https'
+import { Logger } from 'tslog';
 
 /**
  * start scheduler to run tasks

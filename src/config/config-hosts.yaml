@@ -32,8 +32,8 @@ hosts:
     url: /api/health
     ignoreSSL: false
     timeout: 0
-    schedule: 1
-    concurrent: 1
+    schedule: 2
+    concurrent: 30
     headers: { "User-Agent": "servicemon 2.3.0", "api-key": "abc123" }
   - enable: false
     id: 12
