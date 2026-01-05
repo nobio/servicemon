@@ -42,3 +42,24 @@ export class HostConfigStatus {
       this.uri = out.uri;
    }
 }
+export const httpStatusSchema = {
+   title: 'http status schema',
+   version: 1,
+   keyCompression: true,
+   primaryKey: 'txId',
+   type: 'object',
+   properties: {
+      txId: { type: 'string' },
+      configId: { type: 'string' },
+      configName: { type: 'string' },
+      status: { type: 'string' },
+      statusText: { type: 'string' },
+      uri: { type: 'string' },
+      method: { type: 'string' },
+      tsStart: { type: 'string' },
+      tsEnd: { type: 'string' },
+      t: { type: 'string' },
+      duration: { type: 'string' },
+      source: { type: 'string' }
+   }
+}

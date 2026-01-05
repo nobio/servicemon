@@ -22,24 +22,28 @@ Das folgende Lastprofil ist implementiert:
         Anzahl Probes
           ^
           |
+       n -|        /-----------------\
+          |       /                   \
+          |      /                     \
+          |     /                       \
+          |    /                         \
+          |   /                           \
+       0 -|  /                             \
           |
-          |
-       n -|              /-----------------\
-          |             /                   \
-          |            /                     \
-          |           /                       \
-          |          /                         \
-          |         /                           \
-       0 -|   ------                             -----------
-          |
-          +---+----+-----+-----------------+----+----------+-----> t [s]
-              |    |     |                 |    |          |
-              t0   t1    t2                t3   t4         t5
+          +--------+------------------+----+--> t [s]
+              |    |                  |    | 
+              t0   t1                 t2   t3
 
 Folgende Parameter können konfiguriert werden:
-* `(t1 - t0) = delta_0 [s]`
-* `(t2 - t1) = delta_1 [s]`
-* `(t3 - t2) = delta_2 [s]`
-* `(t4 - t3) = delta_3 [s]`
-* `(t5 - t4) = delta_4 [s]`
+* Attack: Dauer: `(t1 - t0)`; Steigung: `(t1 - t0) / n`
+* Sustain: Dauer: `(t2 - t1)`; Steigung: `0`
+* Release: Dauer: `(t2 - t3)`; Steigung: `-(t3 - t2) / n`
 * `n (Max Anzahl Clients)`
+
+Es wird in der Config eines der Modelle parametriert: 
+- plain: konstante Anzahl Requests, gesteuert durch den Parameter `schedule`
+- envelope: Wie hier beschrieben mit Attack, Sustain, Release. Dazu werden folgende Parameter benötigt:
+  - probes (Anzahl n)
+  - attack-time in seconds (t1 - t0)
+  - sustain-time in seconds (t2 - t1)
+  - release-time in seconds (t3 - t2)

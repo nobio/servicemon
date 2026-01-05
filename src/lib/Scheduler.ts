@@ -1,16 +1,15 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 /* eslint @typescript-eslint/no-explicit-any: "off" */
+import { default as axios } from 'axios';
+import { default as https } from 'https';
 import moment from 'moment';
+import { Log } from './api/Log';
 import { Configuration } from './model/Config';
+import { HostConfig } from './model/HostConfig';
+import { HttpStatusCodes } from './model/HttpStatusCodes';
 import { Output } from './model/Output';
 import { PersistenceTargetFactory } from './persistence/PersistenceTargetFactory';
 import { TxQueue } from './TxQueue';
-import { HostConfig } from './model/HostConfig';
-import { HttpStatusCodes } from './model/HttpStatusCodes';
-import { Log } from './api/Log';
-import { default as axios } from 'axios';
-import { default as https } from 'https'
-import { Logger } from 'tslog';
 
 /**
  * start scheduler to run tasks
@@ -32,7 +31,7 @@ export class Scheduler {
         // load configuration and start for each object a task
         this.cfg.hostsConfigs.forEach((cfg: HostConfig) => {
             if (cfg.enable) {
-                Log.info(`| >   starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
+                Log.trace(`| >   starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
                 // initial call...
                 this.invoke(cfg);
                 // ... periodical call
@@ -48,11 +47,11 @@ export class Scheduler {
 
         // start delete handler
         setInterval(() => {
-            Log.info(`| >   deleting old records...`);
+            Log.trace(`| >   deleting old records from persistence target ${this.cfg.peristenceConfig.persistence}...`);
             PersistenceTargetFactory.getInstance().getPersistenceTarget().deleteRecords(
                 this.cfg.peristenceConfig.deleteAfter,
                 this.cfg.peristenceConfig.deleteAfterTimeUnit)
-                .then(res => Log.info(`| >   ${res} records deleted`))
+                .then(res => Log.trace(`| >   ${res} records deleted`))
                 .catch(err => Log.error(err));
         }, (this.cfg.peristenceConfig.latency * 1000));
 

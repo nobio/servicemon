@@ -7,8 +7,9 @@
     "clean": "rimraf ./dist && rimraf ./tmp && rimraf ./*.db*",
     "start": "npx tsx ./src/index.ts",
     "start:dev": "nodemon npx tsx ./src/index.ts",
-    "start:log-info":  "LOGLEVEL=INFO  npx tsx ./src/index.ts",
+    "start:log-info": "LOGLEVEL=INFO  npx tsx ./src/index.ts",
     "start:log-debug": "LOGLEVEL=DEBUG npx tsx ./src/index.ts",
+    "start:log-trace": "LOGLEVEL=TRACE npx tsx ./src/index.ts",
     "start:log-silly": "LOGLEVEL=SILLY npx tsx ./src/index.ts",
     "start:log-error": "LOGLEVEL=ERROR npx tsx ./src/index.ts",
     "lint": "eslint --fix"

@@ -25,8 +25,9 @@ persistenceTarget:
   deleteAfter: 10
   deleteAfterTimeUnit: days
   # values: seconds, minutes, hours, days
-  # latency: cycle time in sconds the delete job is started
-  latency: 600
+  # latency: cycle time in seconds the delete job is started
+  # latency: 600
+  latency: 10
 
   # ================ configuration for database persistence ================
   database:

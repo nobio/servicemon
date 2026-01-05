@@ -29,6 +29,7 @@ export class DataServiceFactory {
         this.dataService = LokijsDBService.getInstance();
         break;
     }
+    Log.debug(`DataServiceFactory initialized with ${target} service and is now ${this.dataService}`);
   }
 
   public static getInstance(): DataServiceFactory {

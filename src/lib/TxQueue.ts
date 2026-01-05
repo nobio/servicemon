@@ -47,7 +47,7 @@ export class TxQueue extends EventEmitter.EventEmitter {
     if (output) {
       this.queue.enqueue(output);
       Log.debug(`after push: queue ${this.queue.length}, tx-queue ${this.txMap.size}`)
-      this.emit("push", output);
+      this.emit("push", output); // inform listeners that a new object has been pushed
     }
   }
 
