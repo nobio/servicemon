@@ -18,6 +18,7 @@ export class Scheduler {
 
     private cfg: Configuration = Configuration.getInstance();
     private httpCodes: HttpStatusCodes = new HttpStatusCodes();
+    private tsStart: number = moment().valueOf();
 
     constructor() {
         Log.silly("init Scheduler")
@@ -29,19 +30,13 @@ export class Scheduler {
     public run() {
 
         // load configuration and start for each object a task
-        this.cfg.hostsConfigs.forEach((cfg: HostConfig) => {
-            if (cfg.enable) {
-                Log.trace(`| >   starting scheduler every ${cfg.schedule} sec for ${cfg.name} with ${cfg.concurrent} threads`);
-                // initial call...
-                this.invoke(cfg);
-                // ... periodical call
-                // ... initialize this thread with numbers of concurrent instances
-                for (let n = 0; n < cfg.concurrent; n++) {
-                    setInterval(() => {
-                        // Log.error(cfg.schedule * 1000 + this.variance(cfg.schedule * 10000));
-                        this.invoke(cfg);
-                    }, (cfg.schedule * 1000 + this.variance(cfg.schedule * 10000)));
-                }
+        this.cfg.hostsConfigs.forEach((hostCfg: HostConfig) => {
+            if (hostCfg.enable) {
+                if(hostCfg.model && hostCfg.model.type && hostCfg.model.type === 'plain') {
+                    this.handlePlainModel(hostCfg);
+                } else {
+                    this.handleEnvelopeModel(hostCfg);
+                }   
             }
         });
 
@@ -55,6 +50,36 @@ export class Scheduler {
                 .catch(err => Log.error(err));
         }, (this.cfg.peristenceConfig.latency * 1000));
 
+    }
+
+    private async handlePlainModel(hostCfg: HostConfig) {
+        Log.trace(`| >   starting scheduler every ${hostCfg.schedule} sec for ${hostCfg.name} with ${hostCfg.concurrent} threads`);
+        // initial call...
+        this.invoke(hostCfg);
+        // ... periodical call
+        // ... initialize this thread with numbers of concurrent instances
+        for (let n = 0; n < hostCfg.concurrent; n++) {
+            setInterval(() => {
+                // Log.error(cfg.schedule * 1000 + this.variance(cfg.schedule * 10000));
+                this.invoke(hostCfg);
+            }, (hostCfg.schedule * 1000 + this.variance(hostCfg.schedule * 10000)));
+        }
+    }
+
+    private async handleEnvelopeModel(hostCfg: HostConfig) {
+        Log.trace(`| >   starting ENVELOPE scheduler every ${hostCfg.schedule} sec for ${hostCfg.name} with ${hostCfg.concurrent} threads`);
+        // initial call...
+        this.invoke(hostCfg);
+        // ... periodical call
+        // ... initialize this thread with numbers of concurrent instances
+        for (let n = 0; n < hostCfg.concurrent; n++) {
+            setInterval(() => {
+                // calculate current phase
+                const elapsed = moment().valueOf() - this.tsStart;
+                const cycleTime = hostCfg.model.probes * hostCfg.model.attackTime + hostCfg.model.sustainTime + hostCfg.model.releaseTime;
+                const timeInCycle = elapsed % cycleTime;
+            }, (hostCfg.schedule * 1000 + this.variance(hostCfg.schedule * 10000)));      
+        }
     }
 
     /**
