@@ -30,7 +30,7 @@ hosts:
     url: /api/health
     headers: { "User-Agent": "servicemon 2.3.0" }
     schedule: 2
-    concurrent: 1
+    concurrent: 10
     model:
       type: envelope
       probes: 20

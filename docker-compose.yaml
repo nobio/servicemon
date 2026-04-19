@@ -1,20 +1,22 @@
-version: "3"
 services:
   servicemon:
     container_name: servicemon
     restart: always
-    image: nobio/servicemon:2.2.4
+    image: nobio/servicemon:latest
     # Raspi:
     # platform: linux/arm/v7
     # Linux/Mac:
     platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-    - LOGLEVEL=DEBUG # 0: silly, 1: debug, 2: trace, 3: info, 4: warn, 5: error, 6: fatal
-    - DATASERVICE=MONGODB
-    - MONGODB_USER=httpstatus-user
-    - MONGODB_PASSWORD=a57XDbVIlpVHNjuF
-    - MONGODB_URI=nobiocluster.arj0i.mongodb.net/http-status?retryWrites=true&w=majority
-    - MONGODB_PROTOCOL=mongodb+srv
-    #volumes:
+      - LOGLEVEL=DEBUG # 0: silly, 1: debug, 2: trace, 3: info, 4: warn, 5: error, 6: fatal
+      - DATASERVICE=MONGODB
+      - MONGODB_USER=httpstatus-user
+      - MONGODB_PASSWORD=a57XDbVIlpVHNjuF
+      - MONGODB_URI=nobiocluster.arj0i.mongodb.net/http-status?retryWrites=true&w=majority
+      - MONGODB_PROTOCOL=mongodb+srv
+      #volumes:
     ports:
       - "28090:28090"

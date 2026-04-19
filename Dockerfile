@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.22 AS base-image
+FROM node:20-alpine AS base-image
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
@@ -13,10 +13,8 @@ RUN touch monitor.db monitor.db.0
 RUN chmod g+rw monitor.db*
 
 RUN npm ci
-RUN npm run build:docker --production
-RUN rm -rf ./src
 
 EXPOSE 28090 28090
 EXPOSE 28093 28093
 
-CMD [ "npm", "run", "start:docker" ]
+CMD [ "npm", "run", "start:log-info" ]
