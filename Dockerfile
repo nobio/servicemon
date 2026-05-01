@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base-image
+FROM node:25-alpine AS base-image
 WORKDIR /opt/servicemon
 
 # copy configs to /app folder
